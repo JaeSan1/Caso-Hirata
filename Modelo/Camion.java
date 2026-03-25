@@ -1,4 +1,4 @@
-package Modelo;
+/* package Modelo;
 
 //import java.sql.Date;
 
@@ -34,7 +34,7 @@ public class camiones {
         this.id = id;
         this.marca = marca;
         this.modelo =modelo;
-        this.anio = anio;
+        this.año = año;
         this.km_actual =km_actual;
         this.km_ultimo_mantenimiento = km_ultimo_mantenimiento;
     }
@@ -88,3 +88,4 @@ public class camiones {
         this.km_ultimo_mantenimiento = km_ultimo_mantenimiento;
     }
 }
+    */
