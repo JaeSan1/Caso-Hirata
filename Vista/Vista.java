@@ -1,6 +1,6 @@
 package Vista;
 
-import Controlador.ControladorCamion;
+import Controlador.conductores;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +17,7 @@ public class Vista extends JFrame {
     private TextField txtPatente, txtConductor, txtUbicacion, txtFechaMantenimiento;
     private Checkbox chkActivo;
     private Button btnAgregar, btnActualizar, btnEliminar, btnLeer;
-    private ControladorCamion controlador;
+    private conductores controlador;
     private JTable table;
     private DefaultTableModel tableModel;
 
@@ -31,7 +31,7 @@ public class Ventana extends JFrame {
 }
 
     private void configuracion() {
-        controlador = new ControladorCamion();
+        controlador = new conductores();
         setTitle("Gestión de Flota 4.0");
         setSize(600, 600);
         setLayout(null);
