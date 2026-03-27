@@ -1,42 +1,30 @@
-/* package Modelo;
-
-//import java.sql.Date;
+package Modelo;
 
 
-public class conductores {
-    private int id;
-    private String nombre;
-    private String licencia;
-    private int telefono;
 
-    public conductores(int id, String nombre, String licencia, int telefono){
-        this.id = id;
-        this.nombre = nombre;
-        this.licencia = licencia;
-        this.telefono = telefono;
-    }
 
-    public int getId(){
-        return id;
-    }
-}
-
-public class camiones {
+public class Camion {
     private int id;
     private String marca;
     private String modelo;
     private int anio;
     private double km_actual;
     private double km_ultimo_mantenimiento;
+    private Integer conductorId;
+    
+    public Camion(){
+
+    }
 
     // Constructor
-    public camiones(int id, String marca, String modelo, int anio, double km_actual, double km_ultimo_mantenimiento) {
+    public Camion(int id, String marca, String modelo, int anio, double km_actual, double km_ultimo_mantenimiento, Integer conductorId) {
         this.id = id;
         this.marca = marca;
         this.modelo =modelo;
-        this.año = año;
+        this.anio = anio;
         this.km_actual =km_actual;
         this.km_ultimo_mantenimiento = km_ultimo_mantenimiento;
+        this.conductorId = conductorId;
     }
 
     // Getters y Setters
@@ -87,5 +75,11 @@ public class camiones {
     public void setkm_ultimo_mantenimiento(double km_ultimo_mantenimiento) {
         this.km_ultimo_mantenimiento = km_ultimo_mantenimiento;
     }
+    public Integer getconductorId() {
+        return conductorId;
+    
+    }
+    public void setconductorId(Integer conductorId){
+        this.conductorId = conductorId;
+    }
 }
-    */
