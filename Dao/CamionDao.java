@@ -1,7 +1,8 @@
-package dao;
+package Dao;
 
 import java.sql.*;
-import modelo.Camion;
+import Modelo.Camion;
+import Dao.Conexion;
 
 public class CamionDao {
 
@@ -37,5 +38,17 @@ public class CamionDao {
             System.out.println("Error al consultar: " + e.getMessage());
         }
         return km;
+    }
+
+    public boolean eliminar(int idEliminar) throws SQLException {
+        String sql = "DELETE FROM camion WHERE id_camion=?";
+
+        try (Connection conn = getConexion(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idEliminar);
+            return pstmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) { throw e; }
     }
 }

@@ -1,9 +1,9 @@
-package vista;
+package Vista; 
 
-public class Main {
+public class main { 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            new Ventana().setVisible(true);
+            new Vista().setVisible(true); 
         });
     }
 }

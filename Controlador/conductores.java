@@ -1,4 +1,4 @@
-package controlador;
+package Controlador;
 
 import java.awt.Checkbox;
 import java.awt.TextField;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import modelo.Transporte; 
+import Modelo.Transporte; 
 
 
 public class conductores {

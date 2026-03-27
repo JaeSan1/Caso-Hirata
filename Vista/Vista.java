@@ -1,6 +1,6 @@
-package vista;
+package Vista;
 
-import controlador.ControladorCamion;
+import Controlador.ControladorCamion;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,12 +21,14 @@ public class Vista extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
 
+public class Ventana extends JFrame {
     public Ventana() {
-        configuracion();
-        agregarListeners(); 
-        cargarCamiones();
-        setVisible(true); 
+        setTitle("My Application");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Add components here if needed, e.g., panels, buttons
     }
+}
 
     private void configuracion() {
         controlador = new ControladorCamion();
