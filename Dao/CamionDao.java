@@ -1,54 +1,98 @@
 package Dao;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import Modelo.Camion;
-import Dao.Conexion;
 
 public class CamionDao {
 
-    public void registrarKm(int id, double nuevoKm) {
-        String sql = "UPDATE camiones SET km_actual = ? WHERE id = ?";
+    // RF-01: Insertar datos de un nuevo camión
+    public boolean insertar(Camion camion) throws SQLException {
+        String sql = "INSERT INTO camiones (marca, modelo, anio, km_actual, km_ultimo_mantenimiento, conductor_id) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection con = Conexion.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             
-            ps.setDouble(1, nuevoKm); 
-            ps.setInt(2, id);        
-            ps.executeUpdate();       
+            ps.setString(1, camion.getMarca());
+            ps.setString(2, camion.getModelo());
+            ps.setInt(3, camion.getAnio());
+            ps.setDouble(4, camion.getKmActual());
+            ps.setDouble(5, 0.0); // Inicia en 0 para el primer mantenimiento
+            ps.setInt(6, camion.getConductorId());
             
-        } catch (SQLException e) {
-            System.out.println("Error al guardar: " + e.getMessage());
+            return ps.executeUpdate() > 0;
         }
     }
 
-    public double verKilometraje(int id) {
-        String sql = "SELECT km_actual FROM camiones WHERE id = ?";
-        double km = 0;
+    // RF-02: Visualizar información de la flota (Listar)
+    public List<Camion> obtenerTodos() throws SQLException {
+        List<Camion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM camiones";
 
+        try (Connection con = Conexion.getConexion();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Camion c = new Camion();
+                c.setId(rs.getInt("id"));
+                c.setMarca(rs.getString("marca"));
+                c.setModelo(rs.getString("modelo"));
+                c.setAnio(rs.getInt("anio"));
+                c.setKmActual(rs.getDouble("km_actual"));
+                c.setKmUltimoMantenimiento(rs.getDouble("km_ultimo_mantenimiento"));
+                lista.add(c);
+            }
+        }
+        return lista;
+    }
+
+    // RF-02: Actualizar datos (Kilometraje o información)
+    public boolean actualizar(Camion camion) throws SQLException {
+        String sql = "UPDATE camiones SET marca=?, modelo=?, anio=?, km_actual=?, conductor_id=? WHERE id=?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, camion.getMarca());
+            ps.setString(2, camion.getModelo());
+            ps.setInt(3, camion.getAnio());
+            ps.setDouble(4, camion.getKmActual());
+            ps.setInt(5, camion.getConductorId());
+            ps.setInt(6, camion.getId());
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // RF-02: Eliminar un camión del registro
+    public boolean eliminar(int id) throws SQLException {
+        String sql = "DELETE FROM camiones WHERE id = ?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // EXTRA: Lógica para la Alerta de Mantenimiento (RF-01)
+    public boolean necesitaMantenimiento(int id) throws SQLException {
+        String sql = "SELECT km_actual, km_ultimo_mantenimiento FROM camiones WHERE id = ?";
         try (Connection con = Conexion.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            
             if (rs.next()) {
-                km = rs.getDouble("km_actual"); 
+                double actual = rs.getDouble("km_actual");
+                double ultimo = rs.getDouble("km_ultimo_mantenimiento");
+                // Si la diferencia es de 5000 o más, retorna true 
+                return (actual - ultimo) >= 5000;
             }
-        } catch (SQLException e) {
-            System.out.println("Error al consultar: " + e.getMessage());
         }
-        return km;
-    }
-
-    public boolean eliminar(int idEliminar) throws SQLException {
-        String sql = "DELETE FROM camion WHERE id_camion=?";
-
-        try (Connection conn = getConexion(); 
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, idEliminar);
-            return pstmt.executeUpdate() > 0;
-            
-        } catch (SQLException e) { throw e; }
+        return false;
     }
 }

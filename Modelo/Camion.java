@@ -82,4 +82,9 @@ public class Camion {
     public void setconductorId(Integer conductorId){
         this.conductorId = conductorId;
     }
+
+    public boolean requiereMantenimiento() {
+    return (this.km_actual - this.km_ultimo_mantenimiento) >= 5000;
+    }
+    
 }
