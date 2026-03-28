@@ -1,266 +1,173 @@
 package Vista;
 
-import Controlador.conductores;
+import Controlador.ControladorCamion;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-import java.time.format.DateTimeParseException;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class Vista extends JFrame {
 
-    private TextField txtPatente, txtConductor, txtUbicacion, txtFechaMantenimiento;
-    private Checkbox chkActivo;
-    private Button btnAgregar, btnActualizar, btnEliminar, btnLeer;
-    private conductores controlador;
+    private JTextField txtMarca, txtModelo, txtAnio, txtKmActual, txtKmMantenimiento, txtConductorId;
+    private JButton btnAgregar, btnActualizar, btnEliminar, btnLeer;
+    private ControladorCamion controlador;
     private JTable table;
     private DefaultTableModel tableModel;
 
-public class Ventana extends JFrame {
-    public Ventana() {
-        setTitle("My Application");
-        setSize(400, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Add components here if needed, e.g., panels, buttons
+    public Vista() {
+        configuracion();
+        agregarListeners();
+        cargarCamiones();
+        this.setVisible(true);
     }
-}
 
     private void configuracion() {
-        controlador = new conductores();
-        setTitle("Gestión de Flota 4.0");
-        setSize(600, 600);
+        controlador = new ControladorCamion();
+        setTitle("Gestión de Flota - Camiones");
+        setSize(650, 650);
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setLayout(null);
-        panelPrincipal.setBounds(20, 20, 550, 550);
+        panelPrincipal.setBounds(0, 0, 630, 610);
         panelPrincipal.setBackground(Color.decode("#FFFFE0"));
         add(panelPrincipal);
 
-
+        // --- Panel de Datos (Ajustado a los campos de Camion) ---
         JPanel panelDatos = new JPanel();
         panelDatos.setLayout(null);
-        panelDatos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),
-                "Datos Camión", TitledBorder.LEFT, TitledBorder.TOP));
-        panelDatos.setBounds(10, 10, 520, 200);
+        panelDatos.setBorder(BorderFactory.createTitledBorder("Datos del Camión"));
+        panelDatos.setBounds(10, 10, 600, 180);
         panelDatos.setBackground(Color.decode("#FFFFE0"));
         panelPrincipal.add(panelDatos);
 
-        Label lblPatente = new Label("Patente:");
-        lblPatente.setBounds(20, 30, 100, 25);
-        panelDatos.add(lblPatente);
-        txtPatente = new TextField();
-        txtPatente.setBounds(130, 30, 200, 25);
-        panelDatos.add(txtPatente);
+        // Fila 1
+        JLabel lblMarca = new JLabel("Marca:");
+        lblMarca.setBounds(20, 30, 80, 25);
+        panelDatos.add(lblMarca);
+        txtMarca = new JTextField();
+        txtMarca.setBounds(100, 30, 150, 25);
+        panelDatos.add(txtMarca);
 
-        Label lblConductor = new Label("Conductor:");
-        lblConductor.setBounds(20, 60, 100, 25);
+        JLabel lblModelo = new JLabel("Modelo:");
+        lblModelo.setBounds(300, 30, 80, 25);
+        panelDatos.add(lblModelo);
+        txtModelo = new JTextField();
+        txtModelo.setBounds(400, 30, 150, 25);
+        panelDatos.add(txtModelo);
+
+        // Fila 2
+        JLabel lblAnio = new JLabel("Año:");
+        lblAnio.setBounds(20, 70, 80, 25);
+        panelDatos.add(lblAnio);
+        txtAnio = new JTextField();
+        txtAnio.setBounds(100, 70, 150, 25);
+        panelDatos.add(txtAnio);
+
+        JLabel lblConductor = new JLabel("ID Cond.:");
+        lblConductor.setBounds(300, 70, 80, 25);
         panelDatos.add(lblConductor);
-        txtConductor = new TextField();
-        txtConductor.setBounds(130, 60, 200, 25);
-        panelDatos.add(txtConductor);
+        txtConductorId = new JTextField();
+        txtConductorId.setBounds(400, 70, 150, 25);
+        panelDatos.add(txtConductorId);
 
-        Label lblUbicacion = new Label("Ubicación GPS:");
-        lblUbicacion.setBounds(20, 90, 100, 25);
-        panelDatos.add(lblUbicacion);
-        txtUbicacion = new TextField();
-        txtUbicacion.setBounds(130, 90, 200, 25);
-        panelDatos.add(txtUbicacion);
+        // Fila 3
+        JLabel lblKm = new JLabel("KM Actual:");
+        lblKm.setBounds(20, 110, 80, 25);
+        panelDatos.add(lblKm);
+        txtKmActual = new JTextField();
+        txtKmActual.setBounds(100, 110, 150, 25);
+        panelDatos.add(txtKmActual);
 
-        Label lblFecha = new Label("F. Mantenimiento:");
-        lblFecha.setBounds(20, 120, 100, 25);
-        panelDatos.add(lblFecha);
-        txtFechaMantenimiento = new TextField();
-        txtFechaMantenimiento.setBounds(130, 120, 200, 25);
-        panelDatos.add(txtFechaMantenimiento);
+        JLabel lblKmMant = new JLabel("Último Mant.:");
+        lblKmMant.setBounds(300, 110, 100, 25);
+        panelDatos.add(lblKmMant);
+        txtKmMantenimiento = new JTextField();
+        txtKmMantenimiento.setBounds(400, 110, 150, 25);
+        panelDatos.add(txtKmMantenimiento);
 
+        // --- Botones Operaciones ---
+        JPanel panelOps = new JPanel();
+        panelOps.setLayout(new FlowLayout());
+        panelOps.setBounds(10, 200, 600, 50);
+        panelOps.setBackground(Color.decode("#FFFFE0"));
+        panelPrincipal.add(panelOps);
 
-        chkActivo = new Checkbox("Activo");
-        chkActivo.setBounds(350, 30, 100, 25);
-        panelDatos.add(chkActivo);
+        btnAgregar = new JButton("Agregar");
+        btnActualizar = new JButton("Actualizar");
+        btnEliminar = new JButton("Eliminar");
+        btnLeer = new JButton("Refrescar");
+        panelOps.add(btnAgregar); panelOps.add(btnActualizar); panelOps.add(btnEliminar); panelOps.add(btnLeer);
 
-
-        JPanel panelOperaciones = new JPanel();
-        panelOperaciones.setLayout(null);
-        panelOperaciones.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),
-                "Operaciones", TitledBorder.LEFT, TitledBorder.TOP));
-        panelOperaciones.setBounds(10, 220, 520, 80);
-        panelOperaciones.setBackground(Color.decode("#FFFFE0"));
-        panelPrincipal.add(panelOperaciones);
-
-        btnAgregar = new Button("Agregar");
-        btnAgregar.setBounds(20, 30, 100, 30);
-        panelOperaciones.add(btnAgregar);
-
-        btnActualizar = new Button("Actualizar");
-        btnActualizar.setBounds(130, 30, 100, 30);
-        panelOperaciones.add(btnActualizar);
-
-        btnEliminar = new Button("Eliminar");
-        btnEliminar.setBounds(240, 30, 100, 30);
-        panelOperaciones.add(btnEliminar);
-
-        btnLeer = new Button("Leer");
-        btnLeer.setBounds(350, 30, 100, 30);
-        panelOperaciones.add(btnLeer);
-
-        JPanel panelBaseDatos = new JPanel();
-        panelBaseDatos.setLayout(new BorderLayout());
-        panelBaseDatos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),
-                "Base de Datos", TitledBorder.LEFT, TitledBorder.TOP));
-        panelBaseDatos.setBounds(10, 310, 520, 200);
-        panelBaseDatos.setBackground(Color.decode("#FFFFE0"));
-        panelPrincipal.add(panelBaseDatos);
-
-
+        // --- Tabla ---
         tableModel = new DefaultTableModel(
-                new String[] { "ID", "Patente", "Conductor", "Ubicación", "Estado", "F. Mantenimiento" }, 0);
+                new String[] { "ID", "Marca", "Modelo", "Año", "KM Actual", "Últ. Mant", "ID Cond." }, 0);
         table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        panelBaseDatos.add(scrollPane);
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBounds(10, 260, 600, 300);
+        panelPrincipal.add(scroll);
     }
-    
 
     private void limpiarCampos() {
-        txtPatente.setText("");
-        txtConductor.setText("");
-        txtUbicacion.setText("");
-        txtFechaMantenimiento.setText("");
-        chkActivo.setState(false);
+        txtMarca.setText(""); txtModelo.setText(""); txtAnio.setText("");
+        txtKmActual.setText(""); txtKmMantenimiento.setText(""); txtConductorId.setText("");
     }
-
 
     private void cargarCamiones() {
         try {
             controlador.cargarCamiones(tableModel);
-        } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(
-                null, 
-                "Error al cargar datos: " + ex.getMessage() + "\nVerifique la conexión a la base de datos.", 
-                "Error de Carga", 
-                JOptionPane.ERROR_MESSAGE
-            );
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }
 
-
     private void agregarListeners() {
-        
+        btnAgregar.addActionListener(e -> {
+            try {
+                // Aquí adaptamos los datos para enviarlos al controlador
+                // Nota: Asegúrate de que tu controlador reciba estos campos específicos
+                String marca = txtMarca.getText();
+                String modelo = txtModelo.getText();
+                int anio = Integer.parseInt(txtAnio.getText());
+                double kmA = Double.parseDouble(txtKmActual.getText());
+                double kmM = Double.parseDouble(txtKmMantenimiento.getText());
+                int condId = Integer.parseInt(txtConductorId.getText());
 
-        btnAgregar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String patenteString = txtPatente.getText(); 
-                    String conductorString = txtConductor.getText();
-                    String ubicacionGpsString = txtUbicacion.getText();
-                    String fechamantenimientoString = txtFechaMantenimiento.getText();
-                    boolean estado = chkActivo.getState();
-
-                    controlador.agregarCamion(patenteString, conductorString, ubicacionGpsString, fechamantenimientoString, estado, tableModel);
-                    
-                    cargarCamiones(); 
-                    limpiarCampos();
-
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "Error de base de datos: " + ex.getMessage() + "\nVerifique que la Patente no esté duplicada.", 
-                        "Error de Persistencia", 
-                        JOptionPane.ERROR_MESSAGE
-                    );
-                } catch (DateTimeParseException ex) {
-                    JOptionPane.showMessageDialog(
-                        null, 
-                        "Error de formato de fecha. Use AAAA-MM-DD (e.g., 2024-07-25).", 
-                        "Error de Entrada", 
-                        JOptionPane.ERROR_MESSAGE
-                    );
-                }
-            }
-        });
-        
-
-        btnActualizar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(null, "Debe seleccionar una fila para actualizar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                
-                try {
-                    String patenteString = txtPatente.getText(); 
-                    String conductorString = txtConductor.getText();
-                    String ubicacionGpsString = txtUbicacion.getText();
-                    String fechamantenimientoString = txtFechaMantenimiento.getText();
-                    boolean estado = chkActivo.getState();
-
-
-                    controlador.modificarCamion(selectedRow, patenteString, conductorString, ubicacionGpsString, fechamantenimientoString, estado, tableModel);
-                    
-                    limpiarCampos();
-
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Error de BD al actualizar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (DateTimeParseException ex) {
-                    JOptionPane.showMessageDialog(null, "Error de formato de fecha. Use AAAA-MM-DD.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        
-
-        btnEliminar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(null, "Debe seleccionar una fila para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                
-                try {
-                    
-                    controlador.eliminarCamion(tableModel, selectedRow);
-                    limpiarCampos();
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Error de BD al eliminar: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        
-        btnLeer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cargarCamiones();
+                // Llamada al controlador (asumiendo que actualizaste su firma)
+                // Si tu controlador aún pide patente/ubicación, tendrás que cambiarlo también.
+                controlador.agregarCamion(marca, modelo, anio, kmA, kmM, condId, tableModel);
                 limpiarCampos();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Por favor ingrese números válidos en Año, KM e ID.");
             }
+            cargarCamiones();
         });
-        
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int filaSeleccionada = table.getSelectedRow();
-                if (filaSeleccionada != -1) {
 
-                    txtPatente.setText(tableModel.getValueAt(filaSeleccionada, 1).toString());
-                    txtConductor.setText(tableModel.getValueAt(filaSeleccionada, 2).toString());
-                    txtUbicacion.setText(tableModel.getValueAt(filaSeleccionada, 3).toString());
-                    
-                    String estadoTexto = tableModel.getValueAt(filaSeleccionada, 4).toString();
-                    chkActivo.setState(estadoTexto.equals("Activo"));
-                    
-                    txtFechaMantenimiento.setText(tableModel.getValueAt(filaSeleccionada, 5).toString());
-                }
+        btnLeer.addActionListener(e -> cargarCamiones());
+
+        btnEliminar.addActionListener(e -> {
+            int fila = table.getSelectedRow();
+            if (fila != -1) {
+                controlador.eliminarCamion(fila, tableModel);
             }
         });
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            int fila = table.getSelectedRow();
+            if (fila != -1) {
+                txtMarca.setText(tableModel.getValueAt(fila, 1).toString());
+                txtModelo.setText(tableModel.getValueAt(fila, 2).toString());
+                txtAnio.setText(tableModel.getValueAt(fila, 3).toString());
+                txtKmActual.setText(tableModel.getValueAt(fila, 4).toString());
+                txtKmMantenimiento.setText(tableModel.getValueAt(fila, 5).toString());
+                txtConductorId.setText(tableModel.getValueAt(fila, 6).toString());
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Vista());
     }
 }
