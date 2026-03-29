@@ -1,4 +1,4 @@
-package controlador;
+package Controlador;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -25,25 +25,27 @@ public class ControladorCamion {
         return true;
     }
 
-    public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, int conductorId, DefaultTableModel modeloTabla) {
-        try {
-            if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
 
-            Camion camion = new Camion();
-            camion.setMarca(marca);
-            camion.setModelo(modelo);
-            camion.setAnio(Integer.parseInt(anioStr));
-            camion.setKmActual(Double.parseDouble(kmStr));
-            camion.setConductorId(conductorId);
+public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, int conductorId, DefaultTableModel modeloTabla) {
+    try {
+        if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
 
-            if (camionDao.insertar(camion)) {
-                cargarCamiones(modeloTabla); 
-                JOptionPane.showMessageDialog(null, "Vehículo registrado en la flota Hirata.");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        Camion camion = new Camion();
+        camion.setMarca(marca);
+        camion.setModelo(modelo);
+        camion.setAnio(Integer.parseInt(anioStr));
+        camion.setKmActual(Double.parseDouble(kmStr));
+        camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoMantStr));
+        camion.setConductorId(conductorId);
+
+        if (camionDao.insertar(camion)) {
+            cargarCamiones(modeloTabla); 
+            JOptionPane.showMessageDialog(null, "Vehículo registrado en la flota Hirata.");
         }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
     }
+}
 
     public void modificarCamion(int id, String marca, String modelo, String anioStr, String kmStr, int conductorId, DefaultTableModel modeloTabla) {
         try {

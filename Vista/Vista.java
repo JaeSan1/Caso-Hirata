@@ -3,7 +3,6 @@ package Vista;
 import Controlador.ControladorCamion;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class Vista extends JFrame {
@@ -35,7 +34,6 @@ public class Vista extends JFrame {
         panelPrincipal.setBackground(Color.decode("#FFFFE0"));
         add(panelPrincipal);
 
-        // --- Panel de Datos (Ajustado a los campos de Camion) ---
         JPanel panelDatos = new JPanel();
         panelDatos.setLayout(null);
         panelDatos.setBorder(BorderFactory.createTitledBorder("Datos del Camión"));
@@ -43,7 +41,7 @@ public class Vista extends JFrame {
         panelDatos.setBackground(Color.decode("#FFFFE0"));
         panelPrincipal.add(panelDatos);
 
-        // Fila 1
+
         JLabel lblMarca = new JLabel("Marca:");
         lblMarca.setBounds(20, 30, 80, 25);
         panelDatos.add(lblMarca);
@@ -58,7 +56,6 @@ public class Vista extends JFrame {
         txtModelo.setBounds(400, 30, 150, 25);
         panelDatos.add(txtModelo);
 
-        // Fila 2
         JLabel lblAnio = new JLabel("Año:");
         lblAnio.setBounds(20, 70, 80, 25);
         panelDatos.add(lblAnio);
@@ -73,7 +70,7 @@ public class Vista extends JFrame {
         txtConductorId.setBounds(400, 70, 150, 25);
         panelDatos.add(txtConductorId);
 
-        // Fila 3
+
         JLabel lblKm = new JLabel("KM Actual:");
         lblKm.setBounds(20, 110, 80, 25);
         panelDatos.add(lblKm);
@@ -88,7 +85,7 @@ public class Vista extends JFrame {
         txtKmMantenimiento.setBounds(400, 110, 150, 25);
         panelDatos.add(txtKmMantenimiento);
 
-        // --- Botones Operaciones ---
+
         JPanel panelOps = new JPanel();
         panelOps.setLayout(new FlowLayout());
         panelOps.setBounds(10, 200, 600, 50);
@@ -101,7 +98,7 @@ public class Vista extends JFrame {
         btnLeer = new JButton("Refrescar");
         panelOps.add(btnAgregar); panelOps.add(btnActualizar); panelOps.add(btnEliminar); panelOps.add(btnLeer);
 
-        // --- Tabla ---
+
         tableModel = new DefaultTableModel(
                 new String[] { "ID", "Marca", "Modelo", "Año", "KM Actual", "Últ. Mant", "ID Cond." }, 0);
         table = new JTable(tableModel);
@@ -125,25 +122,22 @@ public class Vista extends JFrame {
 
     private void agregarListeners() {
         btnAgregar.addActionListener(e -> {
-            try {
-                // Aquí adaptamos los datos para enviarlos al controlador
-                // Nota: Asegúrate de que tu controlador reciba estos campos específicos
-                String marca = txtMarca.getText();
-                String modelo = txtModelo.getText();
-                int anio = Integer.parseInt(txtAnio.getText());
-                double kmA = Double.parseDouble(txtKmActual.getText());
-                double kmM = Double.parseDouble(txtKmMantenimiento.getText());
-                int condId = Integer.parseInt(txtConductorId.getText());
+    try {
+        
+        String marca = txtMarca.getText();
+        String modelo = txtModelo.getText();
+        String anio = txtAnio.getText(); 
+        String kmA = txtKmActual.getText(); 
+        String kmM = txtKmMantenimiento.getText(); 
+        int condId = Integer.parseInt(txtConductorId.getText());
 
-                // Llamada al controlador (asumiendo que actualizaste su firma)
-                // Si tu controlador aún pide patente/ubicación, tendrás que cambiarlo también.
-                controlador.agregarCamion(marca, modelo, anio, kmA, kmM, condId, tableModel);
-                limpiarCampos();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Por favor ingrese números válidos en Año, KM e ID.");
-            }
-            cargarCamiones();
-        });
+        controlador.agregarCamion(marca, modelo, anio, kmA, kmM, condId, tableModel);
+        limpiarCampos();
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(null, "El ID de conductor debe ser un número.");
+    }
+    cargarCamiones();
+    });
 
         btnLeer.addActionListener(e -> cargarCamiones());
 

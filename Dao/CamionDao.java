@@ -1,9 +1,9 @@
 package Dao;
 
+import Modelo.Camion;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import Modelo.Camion;
 
 public class CamionDao {
 
@@ -25,7 +25,7 @@ public class CamionDao {
         }
     }
 
-    // RF-02: Visualizar información de la flota (Listar)
+
     public List<Camion> obtenerTodos() throws SQLException {
         List<Camion> lista = new ArrayList<>();
         String sql = "SELECT * FROM camiones";
@@ -48,7 +48,7 @@ public class CamionDao {
         return lista;
     }
 
-    // RF-02: Actualizar datos (Kilometraje o información)
+
     public boolean actualizar(Camion camion) throws SQLException {
         String sql = "UPDATE camiones SET marca=?, modelo=?, anio=?, km_actual=?, conductor_id=? WHERE id=?";
 
@@ -66,7 +66,6 @@ public class CamionDao {
         }
     }
 
-    // RF-02: Eliminar un camión del registro
     public boolean eliminar(int id) throws SQLException {
         String sql = "DELETE FROM camiones WHERE id = ?";
 
