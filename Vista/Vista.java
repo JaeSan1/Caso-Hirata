@@ -37,7 +37,7 @@ public class Vista extends JFrame {
         JPanel panelDatos = new JPanel();
         panelDatos.setLayout(null);
         panelDatos.setBorder(BorderFactory.createTitledBorder("Datos del Camión"));
-        panelDatos.setBounds(10, 10, 600, 180);
+        panelDatos.setBounds(10, 60, 600, 280);
         panelDatos.setBackground(Color.decode("#FFFFE0"));
         panelPrincipal.add(panelDatos);
 
@@ -50,45 +50,45 @@ public class Vista extends JFrame {
         panelDatos.add(txtMarca);
 
         JLabel lblModelo = new JLabel("Modelo:");
-        lblModelo.setBounds(300, 30, 80, 25);
+        lblModelo.setBounds(20, 70, 80, 25);
         panelDatos.add(lblModelo);
         txtModelo = new JTextField();
-        txtModelo.setBounds(400, 30, 150, 25);
+        txtModelo.setBounds(100, 70, 150, 25);
         panelDatos.add(txtModelo);
 
         JLabel lblAnio = new JLabel("Año:");
-        lblAnio.setBounds(20, 70, 80, 25);
+        lblAnio.setBounds(20, 110, 80, 25);
         panelDatos.add(lblAnio);
         txtAnio = new JTextField();
-        txtAnio.setBounds(100, 70, 150, 25);
+        txtAnio.setBounds(100, 110, 150, 25);
         panelDatos.add(txtAnio);
 
         JLabel lblConductor = new JLabel("ID Cond.:");
-        lblConductor.setBounds(300, 70, 80, 25);
+        lblConductor.setBounds(20, 150, 80, 25);
         panelDatos.add(lblConductor);
         txtConductorId = new JTextField();
-        txtConductorId.setBounds(400, 70, 150, 25);
+        txtConductorId.setBounds(100, 150, 150, 25);
         panelDatos.add(txtConductorId);
 
 
         JLabel lblKm = new JLabel("KM Actual:");
-        lblKm.setBounds(20, 110, 80, 25);
+        lblKm.setBounds(20, 190, 80, 25);
         panelDatos.add(lblKm);
         txtKmActual = new JTextField();
-        txtKmActual.setBounds(100, 110, 150, 25);
+        txtKmActual.setBounds(100, 190, 150, 25);
         panelDatos.add(txtKmActual);
 
         JLabel lblKmMant = new JLabel("Último Mant.:");
-        lblKmMant.setBounds(300, 110, 100, 25);
+        lblKmMant.setBounds(20, 230, 100, 25);
         panelDatos.add(lblKmMant);
         txtKmMantenimiento = new JTextField();
-        txtKmMantenimiento.setBounds(400, 110, 150, 25);
+        txtKmMantenimiento.setBounds(100, 230, 150, 25);
         panelDatos.add(txtKmMantenimiento);
 
 
         JPanel panelOps = new JPanel();
         panelOps.setLayout(new FlowLayout());
-        panelOps.setBounds(10, 200, 600, 50);
+        panelOps.setBounds(400, 370, 400, 60);
         panelOps.setBackground(Color.decode("#FFFFE0"));
         panelPrincipal.add(panelOps);
 
@@ -103,7 +103,7 @@ public class Vista extends JFrame {
                 new String[] { "ID", "Marca", "Modelo", "Año", "KM Actual", "Últ. Mant", "ID Cond." }, 0);
         table = new JTable(tableModel);
         JScrollPane scroll = new JScrollPane(table);
-        scroll.setBounds(10, 260, 600, 300);
+        scroll.setBounds(10, 440, 600, 150);
         panelPrincipal.add(scroll);
     }
 
