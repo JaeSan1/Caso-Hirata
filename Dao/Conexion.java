@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexion {
-    // Datos según tu captura y script de SQL
-    private static final String URL = "jdbc:mysql://10.51.0.89/hirata_db?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "estudiantes"; 
+    private static final String URL = "jdbc:mysql://10.51.0.89/hirata_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+    private static final String USER = "estudiante"; 
     private static final String PASS = "Net_Dev_#02";     
 
     public static Connection getConexion() {
@@ -19,4 +18,4 @@ public class Conexion {
         }
         return con;
     }
-}
+} 
