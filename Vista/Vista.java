@@ -3,19 +3,23 @@ package Vista;
 import Controlador.ControladorCamion;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class Vista extends JFrame {
 
     private JTextField txtMarca, txtModelo, txtAnio, txtKmActual, txtKmMantenimiento, txtConductorId;
-    private JTextArea areaAlertas; // Nuevo para las alertas
+    private JTable tableAlertas; 
+    private DefaultTableModel modelAlertas;
     private JButton btnAgregar, btnActualizar, btnEliminar, btnLeer;
     private ControladorCamion controlador;
-    private JTable table;
-    private DefaultTableModel tableModel;
+    private JTable tablePrincipal;
+    private DefaultTableModel modelPrincipal;
 
     public Vista() {
+        
+        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) {}
+        
         configuracion();
         agregarListeners();
         cargarCamiones();
@@ -24,141 +28,134 @@ public class Vista extends JFrame {
 
     private void configuracion() {
         controlador = new ControladorCamion();
-        setTitle("Gestión de Flota - Camiones");
-        setSize(900, 650); // Ampliado para que quepa el panel lateral
+        setTitle("Gestión de Flota - Empresa Hirata");
+        setSize(1000, 700);
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panelPrincipal = new JPanel();
-        panelPrincipal.setLayout(null);
-        panelPrincipal.setBounds(0, 0, 880, 610);
+        JPanel panelPrincipal = new JPanel(null);
+        panelPrincipal.setBounds(0, 0, 985, 660);
         panelPrincipal.setBackground(Color.decode("#FFFFE0"));
         add(panelPrincipal);
 
-        // --- TU PANEL DE DATOS (Ajustado en ancho para hacer espacio) ---
-        JPanel panelDatos = new JPanel();
-        panelDatos.setLayout(null);
+        
+        JPanel panelDatos = new JPanel(null);
         panelDatos.setBorder(BorderFactory.createTitledBorder("Datos del Camión"));
-        panelDatos.setBounds(10, 60, 420, 280); // Ancho reducido de 600 a 420
+        panelDatos.setBounds(20, 40, 440, 280);
         panelDatos.setBackground(Color.decode("#FFFFE0"));
         panelPrincipal.add(panelDatos);
 
-        // Tus etiquetas y campos originales
-        JLabel lblMarca = new JLabel("Marca:");
-        lblMarca.setBounds(20, 30, 80, 25);
-        panelDatos.add(lblMarca);
-        txtMarca = new JTextField();
-        txtMarca.setBounds(130, 30, 200, 25);
-        panelDatos.add(txtMarca);
+        int y = 30, gap = 35;
+        JLabel lblMarca = new JLabel("Marca:"); lblMarca.setBounds(25, y, 100, 25);
+        txtMarca = new JTextField(); txtMarca.setBounds(130, y, 280, 25);
+        panelDatos.add(lblMarca); panelDatos.add(txtMarca);
 
-        JLabel lblModelo = new JLabel("Modelo:");
-        lblModelo.setBounds(20, 70, 80, 25);
-        panelDatos.add(lblModelo);
-        txtModelo = new JTextField();
-        txtModelo.setBounds(130, 70, 200, 25);
-        panelDatos.add(txtModelo);
+        JLabel lblModelo = new JLabel("Modelo:"); lblModelo.setBounds(25, y + gap, 100, 25);
+        txtModelo = new JTextField(); txtModelo.setBounds(130, y + gap, 280, 25);
+        panelDatos.add(lblModelo); panelDatos.add(txtModelo);
 
-        JLabel lblAnio = new JLabel("Año:");
-        lblAnio.setBounds(20, 110, 80, 25);
-        panelDatos.add(lblAnio);
-        txtAnio = new JTextField();
-        txtAnio.setBounds(130, 110, 200, 25);
-        panelDatos.add(txtAnio);
+        JLabel lblAnio = new JLabel("Año:"); lblAnio.setBounds(25, y + (gap * 2), 100, 25);
+        txtAnio = new JTextField(); txtAnio.setBounds(130, y + (gap * 2), 280, 25);
+        panelDatos.add(lblAnio); panelDatos.add(txtAnio);
 
-        JLabel lblConductor = new JLabel("ID Cond.:");
-        lblConductor.setBounds(20, 150, 80, 25);
-        panelDatos.add(lblConductor);
-        txtConductorId = new JTextField();
-        txtConductorId.setBounds(130, 150, 200, 25);
-        panelDatos.add(txtConductorId);
+        JLabel lblCond = new JLabel("ID Cond.:"); lblCond.setBounds(25, y + (gap * 3), 100, 25);
+        txtConductorId = new JTextField(); txtConductorId.setBounds(130, y + (gap * 3), 280, 25);
+        panelDatos.add(lblCond); panelDatos.add(txtConductorId);
 
-        JLabel lblKm = new JLabel("KM Actual:");
-        lblKm.setBounds(20, 190, 80, 25);
-        panelDatos.add(lblKm);
-        txtKmActual = new JTextField();
-        txtKmActual.setBounds(130, 190, 200, 25);
-        panelDatos.add(txtKmActual);
+        JLabel lblKmAct = new JLabel("KM Actual:"); lblKmAct.setBounds(25, y + (gap * 4), 100, 25);
+        txtKmActual = new JTextField(); txtKmActual.setBounds(130, y + (gap * 4), 280, 25);
+        panelDatos.add(lblKmAct); panelDatos.add(txtKmActual);
 
-        JLabel lblKmMant = new JLabel("Último Mant.:");
-        lblKmMant.setBounds(20, 230, 100, 25);
-        panelDatos.add(lblKmMant);
-        txtKmMantenimiento = new JTextField();
-        txtKmMantenimiento.setBounds(130, 230, 200, 25);
-        panelDatos.add(txtKmMantenimiento);
+        JLabel lblKmMant = new JLabel("Último Mant.:"); lblKmMant.setBounds(25, y + (gap * 5), 100, 25);
+        txtKmMantenimiento = new JTextField(); txtKmMantenimiento.setBounds(130, y + (gap * 5), 280, 25);
+        panelDatos.add(lblKmMant); panelDatos.add(txtKmMantenimiento);
 
-        // --- NUEVO: PANEL DE ALERTAS (A la derecha) ---
-        JPanel panelAlertas = new JPanel();
-        panelAlertas.setLayout(null);
-        panelAlertas.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), 
-                "[ PANEL DE ALERTAS MANTENIMIENTO ]", TitledBorder.LEFT, TitledBorder.TOP));
-        panelAlertas.setBounds(440, 60, 420, 280);
+        
+        JPanel panelAlertas = new JPanel(new BorderLayout());
+        panelAlertas.setBorder(BorderFactory.createTitledBorder("[ PANEL DE ALERTAS MANTENIMIENTO ]"));
+        panelAlertas.setBounds(480, 40, 480, 280);
         panelAlertas.setBackground(Color.decode("#FFFFE0"));
         panelPrincipal.add(panelAlertas);
 
-        areaAlertas = new JTextArea();
-        areaAlertas.setEditable(false);
-        areaAlertas.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        areaAlertas.setBackground(Color.decode("#FFFFE0"));
+        modelAlertas = new DefaultTableModel(new String[]{"ID", "Marca", "Modelo", "Exceso (Km)"}, 0);
+        tableAlertas = new JTable(modelAlertas);
+        estilizarTabla(tableAlertas);
         
-        JScrollPane scrollAlertas = new JScrollPane(areaAlertas);
-        scrollAlertas.setBounds(15, 30, 390, 230);
-        scrollAlertas.setBorder(null);
-        panelAlertas.add(scrollAlertas);
+        JScrollPane scrollAlertas = new JScrollPane(tableAlertas);
+        scrollAlertas.getViewport().setBackground(Color.WHITE);
+        panelAlertas.add(scrollAlertas, BorderLayout.CENTER);
 
-        // --- TUS BOTONES ---
-        JPanel panelOps = new JPanel();
-        panelOps.setLayout(new FlowLayout());
-        panelOps.setBounds(240, 370, 400, 60);
+        
+        JPanel panelOps = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        panelOps.setBounds(20, 335, 940, 40);
         panelOps.setBackground(Color.decode("#FFFFE0"));
         panelPrincipal.add(panelOps);
 
         btnAgregar = new JButton("Agregar");
         btnActualizar = new JButton("Actualizar");
         btnEliminar = new JButton("Eliminar");
-        btnLeer = new JButton("Refrescar");
+        btnLeer = new JButton("Leer");
         panelOps.add(btnAgregar); panelOps.add(btnActualizar); panelOps.add(btnEliminar); panelOps.add(btnLeer);
 
-        // --- TU TABLA ---
-        tableModel = new DefaultTableModel(
-                new String[] { "ID", "Marca", "Modelo", "Año", "KM Actual", "Últ. Mant", "ID Cond." }, 0);
-        table = new JTable(tableModel);
-        JScrollPane scroll = new JScrollPane(table);
-        scroll.setBounds(10, 440, 850, 150);
-        panelPrincipal.add(scroll);
+       
+        modelPrincipal = new DefaultTableModel(
+                new String[]{"ID", "Marca", "Modelo", "Año", "KM Actual", "Últ. Mant", "ID Cond."}, 0);
+        tablePrincipal = new JTable(modelPrincipal);
+        estilizarTabla(tablePrincipal);
+
+        JScrollPane scrollPrincipal = new JScrollPane(tablePrincipal);
+        scrollPrincipal.setBounds(20, 385, 945, 250);
+        scrollPrincipal.getViewport().setBackground(Color.WHITE);
+        panelPrincipal.add(scrollPrincipal);
     }
 
-    // NUEVO MÉTODO: Analiza la tabla y muestra quién necesita mantenimiento
-    private void actualizarAlertasAutomaticas() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("⚠️ ¡ATENCIÓN!\n");
-        sb.append("Camiones que superan los 5000 km:\n");
-        sb.append("----------------------------------\n");
-        boolean hayAlertas = false;
+    private void estilizarTabla(JTable t) {
+        t.setRowHeight(30);
+        t.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JTableHeader header = t.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        header.setPreferredSize(new Dimension(0, 35));
+        t.setGridColor(Color.decode("#D3D3D3"));
+        t.setSelectionBackground(Color.decode("#CCE5FF"));
+        t.setShowGrid(true);
+    }
 
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
+    
+    private void actualizarAlertas() {
+        modelAlertas.setRowCount(0); 
+        
+        for (int i = 0; i < modelPrincipal.getRowCount(); i++) {
             try {
-                String marca = tableModel.getValueAt(i, 1).toString();
-                String modelo = tableModel.getValueAt(i, 2).toString();
-                double kmAct = Double.parseDouble(tableModel.getValueAt(i, 4).toString());
-                double kmMant = Double.parseDouble(tableModel.getValueAt(i, 5).toString());
+                int id = Integer.parseInt(modelPrincipal.getValueAt(i, 0).toString());
+                String marca = modelPrincipal.getValueAt(i, 1).toString();
+                String modelo = modelPrincipal.getValueAt(i, 2).toString();
+                double kmAct = Double.parseDouble(modelPrincipal.getValueAt(i, 4).toString());
+                double kmMant = Double.parseDouble(modelPrincipal.getValueAt(i, 5).toString());
 
                 double diferencia = kmAct - kmMant;
 
+              
                 if (diferencia >= 5000) {
-                    sb.append("- ").append(marca).append(" ").append(modelo)
-                      .append("\n  Exceso: ").append(diferencia - 5000).append(" km\n\n");
-                    hayAlertas = true;
+                    modelAlertas.addRow(new Object[]{
+                        id,
+                        marca,
+                        modelo,
+                        String.format("%.1f km", diferencia - 5000)
+                    });
                 }
-            } catch (Exception e) { }
+            } catch (Exception e) {
+                
+            }
         }
+    }
 
-        if (!hayAlertas) {
-            areaAlertas.setText("✅ Todos los camiones están\ndentro del rango de kilometraje.");
-            areaAlertas.setForeground(new Color(0, 128, 0));
-        } else {
-            areaAlertas.setText(sb.toString());
-            areaAlertas.setForeground(Color.RED);
+    private void cargarCamiones() {
+        try {
+            controlador.cargarCamiones(modelPrincipal);
+            actualizarAlertas(); 
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error de conexión con la base de datos.");
         }
     }
 
@@ -167,52 +164,81 @@ public class Vista extends JFrame {
         txtKmActual.setText(""); txtKmMantenimiento.setText(""); txtConductorId.setText("");
     }
 
-    private void cargarCamiones() {
-        try {
-            controlador.cargarCamiones(tableModel);
-            actualizarAlertasAutomaticas(); // Se actualiza cada vez que cargan datos
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
-        }
-    }
-
     private void agregarListeners() {
         btnAgregar.addActionListener(e -> {
             try {
                 controlador.agregarCamion(txtMarca.getText(), txtModelo.getText(), txtAnio.getText(), 
                         txtKmActual.getText(), txtKmMantenimiento.getText(), 
-                        Integer.parseInt(txtConductorId.getText()), tableModel);
+                        Integer.parseInt(txtConductorId.getText()), modelPrincipal);
+                limpiarCampos();
+                cargarCamiones(); 
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: Verifique que los campos numéricos sean correctos.");
+            }
+        });
+
+
+    // FUNCIÓN DEL BOTÓN LEER 
+    btnLeer.addActionListener(e -> {
+        int fila = tablePrincipal.getSelectedRow(); 
+        
+        if (fila != -1) {
+        
+            txtMarca.setText(modelPrincipal.getValueAt(fila, 1).toString());
+            txtModelo.setText(modelPrincipal.getValueAt(fila, 2).toString());
+            txtAnio.setText(modelPrincipal.getValueAt(fila, 3).toString());
+            txtKmActual.setText(modelPrincipal.getValueAt(fila, 4).toString());
+            txtKmMantenimiento.setText(modelPrincipal.getValueAt(fila, 5).toString());
+            txtConductorId.setText(modelPrincipal.getValueAt(fila, 6).toString());
+            
+         
+            System.out.println("Datos cargados desde la tabla.");
+        } else {
+          
+            cargarCamiones();
+            limpiarCampos();
+            JOptionPane.showMessageDialog(this, "Seleccione una fila para leer sus datos o presione de nuevo para refrescar la lista.");
+        }
+    });
+
+        btnEliminar.addActionListener(e -> {
+            int f = tablePrincipal.getSelectedRow();
+            if (f != -1) {
+                controlador.eliminarCamion(f, modelPrincipal);
+                cargarCamiones();
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un camión de la tabla inferior.");
+            }
+        });
+        // FUNCIÓN DEL BOTÓN ACTUALIZAR
+    btnActualizar.addActionListener(e -> {
+        int fila = tablePrincipal.getSelectedRow();
+        if (fila != -1) {
+            try {
+              
+                int id = Integer.parseInt(modelPrincipal.getValueAt(fila, 0).toString());
+
+               
+                controlador.modificarCamion(
+                    id,                                     
+                    txtMarca.getText(),                   
+                    txtModelo.getText(),                 
+                    txtAnio.getText(),                    
+                    txtKmActual.getText(),              
+                    txtKmMantenimiento.getText(),         
+                    Integer.parseInt(txtConductorId.getText()), 
+                    modelPrincipal                      
+                );
+
                 limpiarCampos();
                 cargarCamiones();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "El ID de conductor debe ser un número.");
+                JOptionPane.showMessageDialog(this, "Datos numéricos incorrectos.");
             }
-        });
-
-        btnLeer.addActionListener(e -> cargarCamiones());
-
-        btnEliminar.addActionListener(e -> {
-            int fila = table.getSelectedRow();
-            if (fila != -1) {
-                controlador.eliminarCamion(fila, tableModel);
-                cargarCamiones();
-            }
-        });
-
-        table.getSelectionModel().addListSelectionListener(e -> {
-            int fila = table.getSelectedRow();
-            if (fila != -1) {
-                txtMarca.setText(tableModel.getValueAt(fila, 1).toString());
-                txtModelo.setText(tableModel.getValueAt(fila, 2).toString());
-                txtAnio.setText(tableModel.getValueAt(fila, 3).toString());
-                txtKmActual.setText(tableModel.getValueAt(fila, 4).toString());
-                txtKmMantenimiento.setText(tableModel.getValueAt(fila, 5).toString());
-                txtConductorId.setText(tableModel.getValueAt(fila, 6).toString());
-            }
-        });
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Vista());
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona una fila de la tabla primero.");
+        }
+    });
+        
     }
 }
