@@ -25,7 +25,8 @@ public class ControladorCamion {
         return true;
     }
 
-    public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, int conductorId, DefaultTableModel modeloTabla) {
+    // CAMBIO: Ahora recibe 'fechaMantStr' como nuevo parámetro
+    public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, String fechaMantStr, int conductorId, DefaultTableModel modeloTabla) {
         try {
             if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
 
@@ -35,6 +36,7 @@ public class ControladorCamion {
             camion.setAnio(Integer.parseInt(anioStr));
             camion.setKmActual(Double.parseDouble(kmStr));
             camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoMantStr));
+            camion.setFechaUltimoMantenimiento(fechaMantStr); // Seteamos la nueva fecha
             camion.setConductorId(conductorId);
 
             if (camionDao.insertar(camion)) {
@@ -46,34 +48,33 @@ public class ControladorCamion {
         }
     }
 
-public void modificarCamion(int id, String marca, String modelo, String anioStr, String kmStr, String kmUltimoStr, int conductorId, DefaultTableModel modeloTabla) {
-    try {
-       
-        if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
+    // CAMBIO: Ahora recibe 'fechaMantStr' para la actualización
+    public void modificarCamion(int id, String marca, String modelo, String anioStr, String kmStr, String kmUltimoStr, String fechaMantStr, int conductorId, DefaultTableModel modeloTabla) {
+        try {
+            if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
 
-        Camion camion = new Camion();
-        camion.setId(id); 
-        camion.setMarca(marca);
-        camion.setModelo(modelo);
-        camion.setAnio(Integer.parseInt(anioStr));
-        camion.setKmActual(Double.parseDouble(kmStr));
-        camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoStr)); 
-        camion.setConductorId(conductorId);
+            Camion camion = new Camion();
+            camion.setId(id); 
+            camion.setMarca(marca);
+            camion.setModelo(modelo);
+            camion.setAnio(Integer.parseInt(anioStr));
+            camion.setKmActual(Double.parseDouble(kmStr));
+            camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoStr)); 
+            camion.setFechaUltimoMantenimiento(fechaMantStr); // Seteamos la fecha actualizada
+            camion.setConductorId(conductorId);
 
-        if (camionDao.actualizar(camion)) {
-            cargarCamiones(modeloTabla); 
-            JOptionPane.showMessageDialog(null, "Camión actualizado correctamente.");
+            if (camionDao.actualizar(camion)) {
+                cargarCamiones(modeloTabla); 
+                JOptionPane.showMessageDialog(null, "Camión actualizado correctamente.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al modificar: " + e.getMessage());
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al modificar: " + e.getMessage());
     }
-}
 
     public void eliminarCamion(int filaSeleccionada, DefaultTableModel modeloTabla) {
         try {
-            
             int id = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
-            
             int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar camión ID " + id + "?");
             if (confirm == JOptionPane.YES_OPTION) {
                 if (camionDao.eliminar(id)) {
@@ -92,20 +93,18 @@ public void modificarCamion(int id, String marca, String modelo, String anioStr,
             List<Camion> lista = camionDao.obtenerTodos();
 
             for (Camion c : lista) {
-               
+                // CAMBIO: Añadimos la fecha a la fila de la tabla (Columna índice 6)
                 modeloTabla.addRow(new Object[]{
                     c.getId(), 
                     c.getMarca(), 
                     c.getModelo(), 
                     c.getAnio(), 
                     c.getKmActual(),
-                    c.getKmUltimoMantenimiento(), 
+                    c.getKmUltimoMantenimiento(),
+                    c.getFechaUltimoMantenimiento(), // Nuevo dato en la tabla
                     c.getConductorId()           
                 });
             }
-            
-
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error de base de datos: " + e.getMessage());
         }
