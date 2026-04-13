@@ -8,7 +8,7 @@ public class Conexion {
 // Local con XAMPP
     private static final String URL = "jdbc:mysql://localhost:3306/hirata_db?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root"; 
-    private static final String PASS = ""; // XAMPP por defecto no tiene contraseña
+    private static final String PASS = ""; 
 
     /* private static final String URL = "jdbc:mysql://10.51.0.89/hirata_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private static final String USER = "estudiante"; 

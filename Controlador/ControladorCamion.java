@@ -1,11 +1,11 @@
 package Controlador;
 
+import Dao.CamionDao;
+import Modelo.Camion;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import Dao.CamionDao; 
-import Modelo.Camion; 
+import javax.swing.table.DefaultTableModel; 
 
 public class ControladorCamion {
 
@@ -25,7 +25,6 @@ public class ControladorCamion {
         return true;
     }
 
-    // CAMBIO: Ahora recibe 'fechaMantStr' como nuevo parámetro
     public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, String fechaMantStr, int conductorId, DefaultTableModel modeloTabla) {
         try {
             if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
@@ -36,7 +35,7 @@ public class ControladorCamion {
             camion.setAnio(Integer.parseInt(anioStr));
             camion.setKmActual(Double.parseDouble(kmStr));
             camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoMantStr));
-            camion.setFechaUltimoMantenimiento(fechaMantStr); // Seteamos la nueva fecha
+            camion.setFechaUltimoMantenimiento(fechaMantStr); //  nueva fecha
             camion.setConductorId(conductorId);
 
             if (camionDao.insertar(camion)) {
@@ -48,7 +47,6 @@ public class ControladorCamion {
         }
     }
 
-    // CAMBIO: Ahora recibe 'fechaMantStr' para la actualización
     public void modificarCamion(int id, String marca, String modelo, String anioStr, String kmStr, String kmUltimoStr, String fechaMantStr, int conductorId, DefaultTableModel modeloTabla) {
         try {
             if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
@@ -60,7 +58,7 @@ public class ControladorCamion {
             camion.setAnio(Integer.parseInt(anioStr));
             camion.setKmActual(Double.parseDouble(kmStr));
             camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoStr)); 
-            camion.setFechaUltimoMantenimiento(fechaMantStr); // Seteamos la fecha actualizada
+            camion.setFechaUltimoMantenimiento(fechaMantStr); //  fecha actualizada
             camion.setConductorId(conductorId);
 
             if (camionDao.actualizar(camion)) {
@@ -93,7 +91,6 @@ public class ControladorCamion {
             List<Camion> lista = camionDao.obtenerTodos();
 
             for (Camion c : lista) {
-                // CAMBIO: Añadimos la fecha a la fila de la tabla (Columna índice 6)
                 modeloTabla.addRow(new Object[]{
                     c.getId(), 
                     c.getMarca(), 
@@ -101,7 +98,7 @@ public class ControladorCamion {
                     c.getAnio(), 
                     c.getKmActual(),
                     c.getKmUltimoMantenimiento(),
-                    c.getFechaUltimoMantenimiento(), // Nuevo dato en la tabla
+                    c.getFechaUltimoMantenimiento(), 
                     c.getConductorId()           
                 });
             }

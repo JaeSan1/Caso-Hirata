@@ -131,23 +131,21 @@ public class Vista extends JFrame {
     }
 
     private void actualizarAlertas() {
-        // 1. Limpiamos la tabla de alertas antes de volver a calcular
     modelAlertas.setRowCount(0); 
 
-    // 2. Recorremos todas las filas de la tabla principal de camiones
+    // Se recorre todas las filas de la tabla 
     for (int i = 0; i < modelPrincipal.getRowCount(); i++) {
         try {
-            // Extraemos los datos necesarios de las columnas de la tabla principal
             int id = Integer.parseInt(modelPrincipal.getValueAt(i, 0).toString());
             String marca = modelPrincipal.getValueAt(i, 1).toString();
             String modelo = modelPrincipal.getValueAt(i, 2).toString();
             double kmActual = Double.parseDouble(modelPrincipal.getValueAt(i, 4).toString());
             double kmUltimoMant = Double.parseDouble(modelPrincipal.getValueAt(i, 5).toString());
 
-            // 3. Lógica de Negocio (RF-03): Calculamos la diferencia
+            // Calculamos la diferencia
             double kmsRecorridos = kmActual - kmUltimoMant;
 
-            // 4. Si ha recorrido 5.000 km o más, disparamos la alerta
+            // Si ha recorrido 5.000 km o más, sale la alerta
             if (kmsRecorridos >= 5000) {
                 // Agregamos a la tabla de alertas
                 modelAlertas.addRow(new Object[]{
@@ -158,7 +156,6 @@ public class Vista extends JFrame {
                 });
             }
         } catch (Exception e) {
-            // En caso de error en alguna fila (datos vacíos), saltamos a la siguiente
             System.err.println("Error al procesar alerta en fila " + i + ": " + e.getMessage());
         }
         }

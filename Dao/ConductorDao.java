@@ -13,8 +13,8 @@ public class ConductorDao {
         String sql = "SELECT id, nombre, licencia, telefono FROM conductores";
 
         try (Connection con = Conexion.getConexion();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
                 Conductor c = new Conductor();
@@ -31,11 +31,11 @@ public class ConductorDao {
         return lista;
     }
 
-    // Método para buscar un nombre de conductor por su ID (Útil para la tabla de Camiones)
+    // Método para buscar un nombre de conductor por su ID 
     public String obtenerNombrePorId(int id) throws SQLException {
         String sql = "SELECT nombre FROM conductores WHERE id = ?";
         try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+            PreparedStatement ps = con.prepareStatement(sql)) {
             
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {

@@ -7,11 +7,12 @@ import java.util.List;
 
 public class CamionDao {
 
-    // Método privado para convertir DD-MM-AAAA (Vista) a AAAA-MM-DD (MySQL)
+    // Método privado para convertir DD-MM-AAAA (Vista) a AAAA-MM-DD
     private String formatearParaDB(String fechaVista) {
         try {
             if (fechaVista == null || fechaVista.contains("D") || fechaVista.isEmpty()) return null;
             String[] partes = fechaVista.split("-");
+
             // Convierte de DD-MM-AAAA a AAAA-MM-DD
             return partes[2] + "-" + partes[1] + "-" + partes[0];
         } catch (Exception e) {
@@ -24,6 +25,7 @@ public class CamionDao {
         try {
             if (fechaDB == null) return "DD-MM-AAAA";
             String[] partes = fechaDB.split("-");
+
             // Convierte de AAAA-MM-DD a DD-MM-AAAA
             return partes[2] + "-" + partes[1] + "-" + partes[0];
         } catch (Exception e) {
@@ -31,12 +33,12 @@ public class CamionDao {
         }
     }
 
-    // RF-01: Insertar datos de un nuevo camión incluyendo la fecha
+    // Insertartamos datos de un nuevo camión en la base de datos
     public boolean insertar(Camion camion) throws SQLException {
         String sql = "INSERT INTO camiones (marca, modelo, anio, km_actual, km_ultimo_mantenimiento, fecha_ultimo_mantenimiento, conductor_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+            PreparedStatement ps = con.prepareStatement(sql)) {
             
             ps.setString(1, camion.getMarca());
             ps.setString(2, camion.getModelo());
@@ -55,8 +57,8 @@ public class CamionDao {
         String sql = "SELECT * FROM camiones";
 
         try (Connection con = Conexion.getConexion();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
                 Camion c = new Camion();
@@ -66,7 +68,6 @@ public class CamionDao {
                 c.setAnio(rs.getInt("anio"));
                 c.setKmActual(rs.getDouble("km_actual"));
                 c.setKmUltimoMantenimiento(rs.getDouble("km_ultimo_mantenimiento"));
-                // Recuperamos la fecha y la formateamos para que se vea bien en la tabla
                 c.setFechaUltimoMantenimiento(formatearParaVista(rs.getString("fecha_ultimo_mantenimiento")));
                 c.setConductorId(rs.getInt("conductor_id"));
                 lista.add(c);
@@ -79,7 +80,7 @@ public class CamionDao {
         String sql = "UPDATE camiones SET marca=?, modelo=?, anio=?, km_actual=?, km_ultimo_mantenimiento=?, fecha_ultimo_mantenimiento=?, conductor_id=? WHERE id=?";
 
         try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+            PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, camion.getMarca());
             ps.setString(2, camion.getModelo());
@@ -98,18 +99,18 @@ public class CamionDao {
         String sql = "DELETE FROM camiones WHERE id = ?";
 
         try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+            PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         }
     }
 
-    // EXTRA: Lógica para la Alerta de Mantenimiento (RF-01 / RF-03)
+    // Lógica para la Alerta de Mantenimiento
     public boolean necesitaMantenimiento(int id) throws SQLException {
         String sql = "SELECT km_actual, km_ultimo_mantenimiento FROM camiones WHERE id = ?";
         try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+            PreparedStatement ps = con.prepareStatement(sql)) {
             
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();

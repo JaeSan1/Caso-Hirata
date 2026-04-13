@@ -25,29 +25,66 @@ public class Camion {
     }
 
     // Getters y Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId(){ 
+        return id; 
+    }
 
-    public String getMarca() { return marca; }
-    public void setMarca(String marca) { this.marca = marca; }
+    public void setId(int id) 
+    { this.id = id; }
 
-    public String getModelo() { return modelo; }
-    public void setModelo(String modelo) { this.modelo = modelo; }
+    public String getMarca() { 
+        return marca; 
+    }
 
-    public int getAnio() { return anio; }
-    public void setAnio(int anio) { this.anio = anio; }
+    public void setMarca(String marca) { 
+        this.marca = marca; 
+    }
 
-    public double getKmActual() { return kmActual; }
-    public void setKmActual(double kmActual) { this.kmActual = kmActual; }
+    public String getModelo() { 
+        return modelo; 
+    }
 
-    public double getKmUltimoMantenimiento() { return kmUltimoMantenimiento; }
-    public void setKmUltimoMantenimiento(double kmUltimoMantenimiento) { this.kmUltimoMantenimiento = kmUltimoMantenimiento; }
+    public void setModelo(String modelo) { 
+        this.modelo = modelo; 
+    }
 
-    public String getFechaUltimoMantenimiento() { return fechaUltimoMantenimiento; }
-    public void setFechaUltimoMantenimiento(String fecha) { this.fechaUltimoMantenimiento = fecha; }
+    public int getAnio() { 
+        return anio; 
+    }
 
-    public Integer getConductorId() { return conductorId; }
-    public void setConductorId(Integer conductorId) { this.conductorId = conductorId; }
+    public void setAnio(int anio) { 
+        this.anio = anio; 
+    }
+
+    public double getKmActual() { 
+        return kmActual; 
+    }
+    public void setKmActual(double kmActual) { 
+        this.kmActual = kmActual; 
+    }
+
+    public double getKmUltimoMantenimiento() { 
+        return kmUltimoMantenimiento; 
+    }
+
+    public void setKmUltimoMantenimiento(double kmUltimoMantenimiento) { 
+        this.kmUltimoMantenimiento = kmUltimoMantenimiento; 
+    }
+
+    public String getFechaUltimoMantenimiento() { 
+        return fechaUltimoMantenimiento; 
+    }
+    public void setFechaUltimoMantenimiento(String fecha) { 
+        this.fechaUltimoMantenimiento = fecha; 
+    }
+
+    public Integer getConductorId() { 
+        return conductorId; 
+    }
+
+    public void setConductorId(Integer conductorId) { 
+        this.conductorId = conductorId; 
+    }
 
     public boolean requiereMantenimiento() {
         return (this.kmActual - this.kmUltimoMantenimiento) >= 5000;
