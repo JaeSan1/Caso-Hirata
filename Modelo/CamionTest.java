@@ -1,26 +1,40 @@
-package Modelo; 
-import Modelo.Camion;
+package Modelo;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class CamionTest {
 
+    // Lógica de Alerta
     @Test
-    public void testAlertaMantenimiento() {
-        // Simulamos un camión que ha recorrido 7000km (Excede los 5000)
-        Camion camion = new Camion();
-        camion.setKmActual(9000.0);
-        camion.setKmUltimoMantenimiento(2000.0);
+    public void testRequiereMantenimiento() {
+        Camion c = new Camion();
+        c.setKmActual(10000);
+        c.setKmUltimoMantenimiento(4000); // 6000 km recorridos
+        assertTrue("Debería ser true porque superó los 5000km", c.requiereMantenimiento());
         
-        // Esta prueba pasa si el método devuelve true
-        assertTrue("Debería pedir mantenimiento", camion.requiereMantenimiento());
+        c.setKmActual(5000);
+        c.setKmUltimoMantenimiento(4000); // 1000 km recorridos
+        assertFalse("Debería ser false porque no ha llegado al límite", c.requiereMantenimiento());
+    }
+
+    // Garantiza que el objeto guarda bien lo que recibe
+    @Test
+    public void testDatosCamion() {
+        Camion c = new Camion();
+        c.setMarca("Suzuki");
+        c.setAnio(2017);
         
-        // Simulamos un camión con solo 1000km de uso
-        camion.setKmActual(3000.0);
-        camion.setKmUltimoMantenimiento(2000.0);
-        
-        // Esta prueba pasa si el método devuelve false
-        assertFalse("No debería pedir mantenimiento todavía", camion.requiereMantenimiento());
+        assertEquals("Suzuki", c.getMarca());
+        assertEquals(2017, c.getAnio());
+    }
+
+    // Lógica de limite (Exactamente 5000 km)
+    @Test
+    public void testLimiteExacto() {
+        Camion c = new Camion();
+        c.setKmActual(5000);
+        c.setKmUltimoMantenimiento(0); 
+        assertTrue("En el límite exacto de 5000 también debería alertar", c.requiereMantenimiento());
     }
 }
