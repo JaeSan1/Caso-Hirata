@@ -11,11 +11,17 @@ public class Mantenimiento {
     private String descripcion;
     private Double kmAlMomento; 
 
-
+    // Constructor vacío
     public Mantenimiento() {
     }
 
-   
+    // Constructor para el Test
+    public Mantenimiento(String tipo, Double kmAlMomento) {
+        this.tipo = tipo;
+        this.kmAlMomento = kmAlMomento;
+    } 
+
+    // Constructor para BD
     public Mantenimiento(int id, int camionId, LocalDate fecha, String tipo, String descripcion, Double kmAlMomento) {
         this.id = id;
         this.camionId = camionId;
@@ -25,52 +31,22 @@ public class Mantenimiento {
         this.kmAlMomento = kmAlMomento;
     }
 
+    // GETTERS Y SETTERS 
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public int getId() {
-        return id;
-    }
+    public int getCamionId() { return camionId; }
+    public void setCamionId(int camionId) { this.camionId = camionId; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
-    public int getCamionId() {
-        return camionId;
-    }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
-    public void setCamionId(int camionId) {
-        this.camionId = camionId;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Double getKmAlMomento() {
-        return kmAlMomento;
-    }
-
-    public void setKmAlMomento(Double kmAlMomento) {
-        this.kmAlMomento = kmAlMomento;
-    }
+    public Double getKmAlMomento() { return kmAlMomento; }
+    public void setKmAlMomento(Double kmAlMomento) { this.kmAlMomento = kmAlMomento; }
 }

@@ -33,7 +33,7 @@ public class CamionDao {
         }
     }
 
-    // Insertartamos datos de un nuevo camión en la base de datos
+    // Insertamos datos de un nuevo camión en la base de datos
     public boolean insertar(Camion camion) throws SQLException {
         String sql = "INSERT INTO camiones (marca, modelo, anio, km_actual, km_ultimo_mantenimiento, fecha_ultimo_mantenimiento, conductor_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
