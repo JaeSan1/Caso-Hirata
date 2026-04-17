@@ -1,13 +1,13 @@
 package Dao;
 
+import Modelo.Conductor;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import Modelo.Conductor;
 
 public class ConductorDao {
 
-    // Método para obtener todos los conductores (Necesario para llenar JComboBox)
+    // Método para obtener todos los conductores 
     public List<Conductor> obtenerTodos() throws SQLException {
         List<Conductor> lista = new ArrayList<>();
         String sql = "SELECT id, nombre, licencia, telefono FROM conductores";

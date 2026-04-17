@@ -15,19 +15,23 @@ public class ControladorCamion {
         this.camionDao = new CamionDao();
     }
     
-    private boolean validarCamposHirata(String marca, String modelo, String anio, String km) {
-        if (marca.trim().isEmpty() || modelo.trim().isEmpty() || anio.trim().isEmpty() || km.trim().isEmpty()) {
+    // Validación 
+    private boolean validarCamposHirata(String marca, String modelo, String anio, String km, String nombreCond) {
+        if (marca.trim().isEmpty() || modelo.trim().isEmpty() || anio.trim().isEmpty() || 
+            km.trim().isEmpty() || nombreCond.trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, 
-                "Complete los campos: Marca, Modelo, Año y Kilometraje.", 
+                "Complete los campos obligatorios: Marca, Modelo, Año, KM y Nombre del Conductor.", 
                 "Error de Validación", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
     }
 
-    public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, String fechaMantStr, String tipo,String descripcion  int conductorId, String nombre, String licencia, String telefono DefaultTableModel modeloTabla) {
+    public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, 
+                            String fechaMantStr, String tipoMant, String descMant, String nombreCond, 
+                            String licencia, String telefono, DefaultTableModel modeloTabla) {
         try {
-            if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
+            if (!validarCamposHirata(marca, modelo, anioStr, kmStr, nombreCond)) return;
 
             Camion camion = new Camion();
             camion.setMarca(marca);
@@ -36,25 +40,21 @@ public class ControladorCamion {
             camion.setKmActual(Double.parseDouble(kmStr));
             camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoMantStr));
             camion.setFechaUltimoMantenimiento(fechaMantStr); 
-            camion.setTipo(tipo);
-            camion.setDescripcion(descripcion);
-            camion.setConductorId(conductorId);
-            camion.setNombre(nombre);
-            camion.setLicencia(licencia);
-            camion.setTelefono(telefono);
 
-            if (camionDao.insertar(camion)) {
+            if (camionDao.insertar(camion, tipoMant, descMant, nombreCond, licencia, telefono)) {
                 cargarCamiones(modeloTabla); 
-                JOptionPane.showMessageDialog(null, "Vehículo registrado en la flota Hirata.");
+                JOptionPane.showMessageDialog(null, "Registro completo realizado en la flota Hirata.");
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al agregar: " + e.getMessage());
         }
     }
 
-    public void modificarCamion(int id, String marca, String modelo, String anioStr, String kmStr, String kmUltimoStr, String fechaMantStr, int conductorId, DefaultTableModel modeloTabla) {
+    public void modificarCamion(int id, String marca, String modelo, String anioStr, String kmStr, 
+                            String kmUltimoStr, String fechaMantStr, String tipoMant, String descMant, 
+                            String nombreCond, String licencia, String telefono, DefaultTableModel modeloTabla) {
         try {
-            if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
+            if (!validarCamposHirata(marca, modelo, anioStr, kmStr, nombreCond)) return;
 
             Camion camion = new Camion();
             camion.setId(id); 
@@ -63,12 +63,12 @@ public class ControladorCamion {
             camion.setAnio(Integer.parseInt(anioStr));
             camion.setKmActual(Double.parseDouble(kmStr));
             camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoStr)); 
-            camion.setFechaUltimoMantenimiento(fechaMantStr); //  fecha actualizada
-            camion.setConductorId(conductorId);
+            camion.setFechaUltimoMantenimiento(fechaMantStr);
 
-            if (camionDao.actualizar(camion)) {
+            // Usamos el método de actualización 
+            if (camionDao.actualizar(camion, tipoMant, descMant, nombreCond, licencia, telefono)) {
                 cargarCamiones(modeloTabla); 
-                JOptionPane.showMessageDialog(null, "Camión actualizado correctamente.");
+                JOptionPane.showMessageDialog(null, "Datos actualizados correctamente.");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al modificar: " + e.getMessage());
@@ -77,12 +77,14 @@ public class ControladorCamion {
 
     public void eliminarCamion(int filaSeleccionada, DefaultTableModel modeloTabla) {
         try {
+            // Obtenemos el ID de la columna 0 
             int id = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar camión ID " + id + "?");
+            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar permanentemente el registro ID " + id + "?\nEsto borrará también sus mantenimientos asociados.");
+            
             if (confirm == JOptionPane.YES_OPTION) {
                 if (camionDao.eliminar(id)) {
                     cargarCamiones(modeloTabla);
-                    JOptionPane.showMessageDialog(null, "Eliminado de la flota.");
+                    JOptionPane.showMessageDialog(null, "Registro eliminado de la base de datos.");
                 }
             }
         } catch (Exception e) {
@@ -93,22 +95,14 @@ public class ControladorCamion {
     public void cargarCamiones(DefaultTableModel modeloTabla) {
         try {
             modeloTabla.setRowCount(0);
-            List<Camion> lista = camionDao.obtenerTodos();
+            // Obtenemos la lista de objetos combinados 
+            List<Object[]> lista = camionDao.obtenerTodos();
 
-            for (Camion c : lista) {
-                modeloTabla.addRow(new Object[]{
-                    c.getId(), 
-                    c.getMarca(), 
-                    c.getModelo(), 
-                    c.getAnio(), 
-                    c.getKmActual(),
-                    c.getKmUltimoMantenimiento(),
-                    c.getFechaUltimoMantenimiento(), 
-                    c.getConductorId()           
-                });
+            for (Object[] fila : lista) {
+                modeloTabla.addRow(fila);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error de base de datos: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al cargar los datos desde la DB: " + e.getMessage());
         }
     }
 }
