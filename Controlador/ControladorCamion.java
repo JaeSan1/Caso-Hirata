@@ -25,7 +25,7 @@ public class ControladorCamion {
         return true;
     }
 
-    public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, String fechaMantStr, int conductorId, DefaultTableModel modeloTabla) {
+    public void agregarCamion(String marca, String modelo, String anioStr, String kmStr, String kmUltimoMantStr, String fechaMantStr, String tipo,String descripcion  int conductorId, String nombre, String licencia, String telefono DefaultTableModel modeloTabla) {
         try {
             if (!validarCamposHirata(marca, modelo, anioStr, kmStr)) return;
 
@@ -35,8 +35,13 @@ public class ControladorCamion {
             camion.setAnio(Integer.parseInt(anioStr));
             camion.setKmActual(Double.parseDouble(kmStr));
             camion.setKmUltimoMantenimiento(Double.parseDouble(kmUltimoMantStr));
-            camion.setFechaUltimoMantenimiento(fechaMantStr); //  nueva fecha
+            camion.setFechaUltimoMantenimiento(fechaMantStr); 
+            camion.setTipo(tipo);
+            camion.setDescripcion(descripcion);
             camion.setConductorId(conductorId);
+            camion.setNombre(nombre);
+            camion.setLicencia(licencia);
+            camion.setTelefono(telefono);
 
             if (camionDao.insertar(camion)) {
                 cargarCamiones(modeloTabla); 
