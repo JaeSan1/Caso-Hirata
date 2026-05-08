@@ -143,33 +143,41 @@ public class ControladorFlota {
     // =================================================================
 
     public void cargarHistorial(DefaultTableModel modelo) {
-        try {
-            modelo.setRowCount(0);
-            List<Object[]> lista = mantenimientoDao.obtenerHistorialCompleto(); 
-            for (Object[] fila : lista) {
-                // ID_Mant (oculto), Fecha, Tipo, Descripción
-                modelo.addRow(new Object[]{fila[0], fila[6], fila[7], fila[8]});
-            }
-        } catch (SQLException e) { System.err.println("Error carga historial: " + e.getMessage()); }
+    try {
+        modelo.setRowCount(0);
+        List<Object[]> lista = mantenimientoDao.obtenerHistorialCompleto(); 
+        for (Object[] fila : lista) {
+            // Estructura: ID, Fecha, Tipo, Descripcion, KmActual
+            modelo.addRow(new Object[]{fila[0], fila[1], fila[2], fila[3], fila[4]});
+        }
+    } catch (SQLException e) { 
+        System.err.println("Error carga historial: " + e.getMessage()); 
     }
+}
 
-    public void agregarMantenimiento(int idCamion, String fecha, String tipo, String desc, DefaultTableModel m) {
-        try {
-            if (mantenimientoDao.insertarMantenimiento(idCamion, fecha, tipo, desc)) { // Se requiere crear en DAO
-                cargarHistorial(m);
-                JOptionPane.showMessageDialog(null, "Registro de mantenimiento guardado.");
-            }
-        } catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: " + e.getMessage()); }
+public void agregarMantenimiento(int idCamion, String fecha, String tipo, String desc, String km, DefaultTableModel m) {
+    try {
+        double kilometraje = Double.parseDouble(km); // Convertimos el texto a número
+        if (mantenimientoDao.insertarMantenimiento(idCamion, fecha, tipo, desc, kilometraje)) {
+            cargarHistorial(m);
+            JOptionPane.showMessageDialog(null, "Mantenimiento registrado a los " + km + " km.");
+        }
+    } catch (Exception e) { 
+        JOptionPane.showMessageDialog(null, "Error (¿Kilometraje válido?): " + e.getMessage()); 
     }
+}
 
-    public void actualizarMantenimiento(int idMant, String fecha, String tipo, String desc, DefaultTableModel m) {
-        try {
-            if (mantenimientoDao.actualizarMantenimiento(idMant, fecha, tipo, desc)) { // Se requiere crear en DAO
-                cargarHistorial(m);
-                JOptionPane.showMessageDialog(null, "Registro de mantenimiento corregido.");
-            }
-        } catch (Exception e) { JOptionPane.showMessageDialog(null, "Error: " + e.getMessage()); }
+public void actualizarMantenimiento(int idMant, String fecha, String tipo, String desc, String km, DefaultTableModel m) {
+    try {
+        double kilometraje = Double.parseDouble(km);
+        if (mantenimientoDao.actualizarMantenimiento(idMant, fecha, tipo, desc, kilometraje)) {
+            cargarHistorial(m);
+            JOptionPane.showMessageDialog(null, "Registro actualizado correctamente.");
+        }
+    } catch (Exception e) { 
+        JOptionPane.showMessageDialog(null, "Error al actualizar: " + e.getMessage()); 
     }
+}
 
     public void eliminarMantenimiento(int idMant, DefaultTableModel m) {
         try {

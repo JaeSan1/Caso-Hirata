@@ -6,18 +6,23 @@ import java.util.List;
 
 public class MantenimientoDao {
 
-    public boolean insertarMantenimiento(int idCamion, String fecha, String tipo, String desc) throws SQLException {
-        String sql = "INSERT INTO mantenimientos (camion_id, fecha, tipo, descripcion) VALUES (?, ?, ?, ?)";
-        try (Connection con = Conexion.getConexion();
-            PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, idCamion);
-            ps.setString(2, fecha); // Formato AAAA-MM-DD
-            ps.setString(3, tipo);
-            ps.setString(4, desc);
-            return ps.executeUpdate() > 0;
-        }
+    public boolean insertarMantenimiento(int idCamion, String fecha, String tipo, String desc, double km) {
+    String sql = "INSERT INTO mantenimientos (id_camion, fecha, tipo_mantenimiento, descripcion, kilometraje) VALUES (?, ?, ?, ?, ?)";
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setInt(1, idCamion);
+        ps.setString(2, fecha);
+        ps.setString(3, tipo);
+        ps.setString(4, desc);
+        ps.setDouble(5, km); // Aquí es donde entra el kilometraje
+        
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
-
+}
     public List<Object[]> obtenerHistorialCompleto() throws SQLException {
         List<Object[]> lista = new ArrayList<>();
         String sql = "SELECT m.id, c.marca, m.fecha, m.tipo, m.descripcion FROM mantenimientos m " +
@@ -35,21 +40,23 @@ public class MantenimientoDao {
         return lista;
     }
 
-    public boolean actualizarMantenimiento(int idMant, String fecha, String tipo, String desc) throws SQLException {
-    // SQL para actualizar un registro específico por su ID
-        String sql = "UPDATE mantenimientos SET fecha = ?, tipo = ?, descripcion = ? WHERE id = ?";
-    
-            try (Connection con = Conexion.getConexion();
-            PreparedStatement ps = con.prepareStatement(sql)) {
+    public boolean actualizarMantenimiento(int idMant, String fecha, String tipo, String desc, double km) {
+    String sql = "UPDATE mantenimientos SET fecha=?, tipo_mantenimiento=?, descripcion=?, kilometraje=? WHERE id_mantenimiento=?";
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
         
-            ps.setString(1, fecha); // Formato AAAA-MM-DD
-            ps.setString(2, tipo);
-            ps.setString(3, desc);
-            ps.setInt(4, idMant);
+        ps.setString(1, fecha);
+        ps.setString(2, tipo);
+        ps.setString(3, desc);
+        ps.setDouble(4, km);
+        ps.setInt(5, idMant);
         
-            return ps.executeUpdate() > 0;
-        }
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
+}
 
     public boolean eliminar(int id) throws SQLException {
         String sql = "DELETE FROM mantenimientos WHERE id = ?";

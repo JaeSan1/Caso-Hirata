@@ -163,6 +163,18 @@ btnLeer.addActionListener(e -> {
                     ctrlFlota.actualizarConductor(id, campos.get(0).getText(), campos.get(1).getText(), 
                         campos.get(2).getText(), modelPrincipal);
                 }
+
+                else if (tituloModulo.contains("Mantenimientos")) {
+                    int idMant = Integer.parseInt(modelPrincipal.getValueAt(fila, 0).toString());
+                    ctrlFlota.actualizarMantenimiento(
+                    idMant, 
+                    campos.get(0).getText(), // Fecha
+                    campos.get(1).getText(), // Tipo
+                    campos.get(2).getText(), // Desc
+                    campos.get(3).getText(), // Km Actual
+                    modelPrincipal
+                    );  
+                }
                 limpiarControles();
             } else {
                 JOptionPane.showMessageDialog(this, "Debe 'Leer' un registro primero para actualizarlo.");
@@ -181,23 +193,27 @@ btnLeer.addActionListener(e -> {
     } 
     
     else if (tituloModulo.contains("Mantenimientos")) {
-        try {
-            String fecha = campos.get(0).getText();
-            String tipo = campos.get(1).getText();
-            String desc = campos.get(2).getText();
-            String costo = campos.get(3).getText(); 
-
-            // Para mantenimientos, necesitamos un ID de camión. 
-            // Por ahora usaremos el ID 1 para probar que guarde
-            int idCamionPrueba = 1; 
-
-            ctrlFlota.agregarMantenimiento(idCamionPrueba, fecha, tipo, desc, modelPrincipal);
-            
-            cargarDatosDesdeBase(); 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al guardar mantenimiento: " + ex.getMessage());
-        }
+    try {
+        // 1. Solo declaramos las variables necesarias una vez
+        int idCamionPrueba = 1; 
+        
+        // 2. Llamamos al controlador usando los 4 campos (0 a 3)
+        ctrlFlota.agregarMantenimiento(
+            idCamionPrueba, 
+            campos.get(0).getText(), // Fecha
+            campos.get(1).getText(), // Tipo Mant.
+            campos.get(2).getText(), // Descripción
+            campos.get(3).getText(), // Km Actual
+            modelPrincipal
+        );
+        
+        // 3. Refrescamos la tabla
+        cargarDatosDesdeBase(); 
+        
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Error: Verifique que el kilometraje sea numérico.");
     }
+}
     limpiarControles();
 });
 
