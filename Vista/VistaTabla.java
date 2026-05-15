@@ -1,13 +1,11 @@
 package Vista;
 
 import Controlador.ControladorFlota;
+import Controlador.ControladorOficina;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -21,6 +19,7 @@ public class VistaTabla extends JFrame {
     // Controladores
     private String tituloModulo;
     private final ControladorFlota ctrlFlota = new ControladorFlota();
+    private final ControladorOficina ctrlOficina = new ControladorOficina();
 
     public VistaTabla(String titulo, String[] columnas, String[] etiquetasForm, boolean esCamion) {
         this.tituloModulo = titulo;
@@ -117,6 +116,34 @@ public class VistaTabla extends JFrame {
         cargarDatosDesdeBase();
     }
 
+    private void cargarDatosDesdeBase() {
+        try {
+            modelPrincipal.setRowCount(0);
+            if (modelAlertas != null) modelAlertas.setRowCount(0);
+
+            if (tituloModulo.contains("Camiones")) {
+                ctrlFlota.cargarCamiones(modelPrincipal, modelAlertas);
+            } else if (tituloModulo.contains("Conductores")) {
+                ctrlFlota.cargarConductores(modelPrincipal);
+            } else if (tituloModulo.contains("Mantenimientos")) { 
+                ctrlFlota.cargarHistorial(modelPrincipal); 
+            } else if (tituloModulo.contains("Inventario de Equipos")) {
+                ctrlOficina.cargarEquipos(modelPrincipal);
+            } else if (tituloModulo.contains("Gestión de Software")) {
+                ctrlOficina.cargarSoftware(modelPrincipal);
+            } else if (tituloModulo.contains("Inventario de Repuestos")) {
+                ctrlOficina.cargarPiezas(modelPrincipal);
+            } else if (tituloModulo.contains("Mantenimiento de Oficina")) {
+                ctrlOficina.cargarMantenimientos(modelPrincipal);
+            }
+
+            tablePrincipal.revalidate();
+            tablePrincipal.repaint();
+        } catch (Exception e) {
+            System.err.println("Error al cargar: " + e.getMessage());
+        }
+    }
+
     private void estilizarTabla(JTable t) {
         t.setRowHeight(25);
         t.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -174,6 +201,18 @@ btnLeer.addActionListener(e -> {
                     campos.get(3).getText(), // Km Actual
                     modelPrincipal
                     );  
+                } else if (tituloModulo.contains("Inventario de Equipos")) {
+                    ctrlOficina.actualizarEquipo(id, campos.get(0).getText(), campos.get(1).getText(), 
+                        campos.get(2).getText(), modelPrincipal);
+                } else if (tituloModulo.contains("Gestión de Software")) {
+                    ctrlOficina.actualizarSoftware(id, Integer.parseInt(campos.get(0).getText()), campos.get(1).getText(), 
+                        campos.get(2).getText(), modelPrincipal);
+                } else if (tituloModulo.contains("Inventario de Repuestos")) {
+                    ctrlOficina.actualizarPieza(id, campos.get(0).getText(), Integer.parseInt(campos.get(1).getText()), 
+                        modelPrincipal);
+                } else if (tituloModulo.contains("Mantenimiento de Oficina")) {
+                    ctrlOficina.actualizarMantenimiento(id, Integer.parseInt(campos.get(0).getText()), campos.get(1).getText(), 
+                        campos.get(2).getText(), campos.get(3).getText(), modelPrincipal);
                 }
                 limpiarControles();
             } else {
@@ -213,6 +252,18 @@ btnLeer.addActionListener(e -> {
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Error: Verifique que el kilometraje sea numérico.");
     }
+} else if (tituloModulo.contains("Inventario de Equipos")) {
+    ctrlOficina.agregarEquipo(campos.get(0).getText(), campos.get(1).getText(), 
+        campos.get(2).getText(), modelPrincipal);
+} else if (tituloModulo.contains("Gestión de Software")) {
+    ctrlOficina.agregarSoftware(Integer.parseInt(campos.get(0).getText()), campos.get(1).getText(), 
+        campos.get(2).getText(), modelPrincipal);
+} else if (tituloModulo.contains("Inventario de Repuestos")) {
+    ctrlOficina.agregarPieza(campos.get(0).getText(), Integer.parseInt(campos.get(1).getText()), 
+        modelPrincipal);
+} else if (tituloModulo.contains("Mantenimiento de Oficina")) {
+    ctrlOficina.agregarMantenimiento(Integer.parseInt(campos.get(0).getText()), campos.get(1).getText(), 
+        campos.get(2).getText(), campos.get(3).getText(), modelPrincipal);
 }
     limpiarControles();
 });
@@ -226,31 +277,19 @@ btnLeer.addActionListener(e -> {
                     ctrlFlota.eliminarCamion(id, modelPrincipal, modelAlertas);
                 } else if (tituloModulo.contains("Conductores")) {
                     ctrlFlota.eliminarConductor(id, modelPrincipal);
+                } else if (tituloModulo.contains("Inventario de Equipos")) {
+                    ctrlOficina.eliminarEquipo(id, modelPrincipal);
+                } else if (tituloModulo.contains("Gestión de Software")) {
+                    ctrlOficina.eliminarSoftware(id, modelPrincipal);
+                } else if (tituloModulo.contains("Inventario de Repuestos")) {
+                    ctrlOficina.eliminarPieza(id, modelPrincipal);
+                } else if (tituloModulo.contains("Mantenimiento de Oficina")) {
+                    ctrlOficina.eliminarMantenimiento(id, modelPrincipal);
                 }
                 limpiarControles();
             }
         });
     }
-
-    private void cargarDatosDesdeBase() {
-    try {
-        modelPrincipal.setRowCount(0);
-        if (modelAlertas != null) modelAlertas.setRowCount(0);
-
-        if (tituloModulo.contains("Camiones")) {
-            ctrlFlota.cargarCamiones(modelPrincipal, modelAlertas);
-        } else if (tituloModulo.contains("Conductores")) {
-            ctrlFlota.cargarConductores(modelPrincipal);
-        } else if (tituloModulo.contains("Mantenimientos")) { 
-            ctrlFlota.cargarHistorial(modelPrincipal); 
-        }
-
-        tablePrincipal.revalidate();
-        tablePrincipal.repaint();
-    } catch (Exception e) {
-        System.err.println("Error al cargar: " + e.getMessage());
-    }
-}
 
     private void limpiarControles() {
         for (JTextField f : campos) f.setText("");

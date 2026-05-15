@@ -23,29 +23,29 @@ public class SubMenuOficina extends JFrame {
 
         // 1. EQUIPOS
         btnEquipos.addActionListener(e -> {
-            String[] col = {"ID", "Nombre", "Tipo", "Estado", "Ubicación"};
-            String[] form = {"Nombre Equipo", "Tipo (PC/Impresora)", "Estado", "Departamento/Oficina"};
+            String[] col = {"ID", "Nombre", "Tipo", "Estado"};
+            String[] form = {"Nombre Equipo", "Tipo (PC/Impresora)", "Estado"};
             new VistaTabla("Inventario de Equipos", col, form, false).setVisible(true);
         });
 
         // 2. SOFTWARE (Corregido: ahora abre)
         btnSoftware.addActionListener(e -> {
-            String[] col = {"ID", "ID Equipo", "Programa", "Versión", "Licencia"};
-            String[] form = {"ID Equipo", "Nombre Software", "Versión Actual", "Clave de Licencia"};
+            String[] col = {"ID", "ID Equipo", "Programa", "Versión"};
+            String[] form = {"ID Equipo", "Nombre Software", "Versión Actual"};
             new VistaTabla("Gestión de Software", col, form, false).setVisible(true);
         });
 
         // 3. PIEZAS
         btnPiezas.addActionListener(e -> {
-            String[] col = {"ID", "Nombre Pieza", "Stock", "Proveedor"};
-            String[] form = {"Nombre de Pieza", "Cantidad en Stock", "Nombre Proveedor"};
+            String[] col = {"ID", "Nombre Pieza", "Stock"};
+            String[] form = {"Nombre de Pieza", "Cantidad en Stock"};
             new VistaTabla("Inventario de Repuestos TI", col, form, false).setVisible(true);
         });
 
         // 4. MANTENIMIENTO TI (Corregido: ahora abre)
         btnMantenimiento.addActionListener(e -> {
-            String[] col = {"ID", "ID Equipo", "Fecha", "Técnico", "Detalle"};
-            String[] form = {"ID Equipo", "Fecha Servicio", "Nombre Técnico", "Acción Realizada"};
+            String[] col = {"ID", "ID Equipo", "Fecha", "Tipo", "Descripción"};
+            String[] form = {"ID Equipo", "Fecha Servicio", "Tipo (Preventivo/Correctivo)", "Descripción"};
             new VistaTabla("Mantenimiento de Oficina", col, form, false).setVisible(true);
         });
 

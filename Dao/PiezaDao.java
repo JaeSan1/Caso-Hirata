@@ -20,12 +20,49 @@ public class PiezaDao {
         return lista;
     }
 
-    public boolean actualizarStock(int id, int cantidad) throws SQLException {
-        String sql = "UPDATE piezas SET stock = stock + ? WHERE id = ?";
+    public List<Object[]> obtenerTodosParaTabla() throws SQLException {
+        List<Object[]> lista = new ArrayList<>();
+        String sql = "SELECT id, nombre, stock FROM piezas";
+        try (Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new Object[]{
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getInt("stock")
+                });
+            }
+        }
+        return lista;
+    }
+
+    public boolean insertarPieza(String nombre, int stock) throws SQLException {
+        String sql = "INSERT INTO piezas (nombre, stock) VALUES (?, ?)";
         try (Connection con = Conexion.getConexion();
             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, cantidad);
-            ps.setInt(2, id);
+            ps.setString(1, nombre);
+            ps.setInt(2, stock);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean actualizarPieza(int id, String nombre, int stock) throws SQLException {
+        String sql = "UPDATE piezas SET nombre = ?, stock = ? WHERE id = ?";
+        try (Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            ps.setInt(2, stock);
+            ps.setInt(3, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean eliminarPieza(int id) throws SQLException {
+        String sql = "DELETE FROM piezas WHERE id = ?";
+        try (Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         }
     }

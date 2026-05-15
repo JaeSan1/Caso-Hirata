@@ -38,11 +38,56 @@ public class ControladorOficina {
             m.setDescripcion(desc);
 
             if (mantDao.registrarMantenimiento(m)) {
-                JOptionPane.showMessageDialog(null, "Mantenimiento " + tipo + " registrado con éxito.");
-                cargarEquipos(modelo); 
+                JOptionPane.showMessageDialog(null, "Mantenimiento registrado con éxito.");
+                cargarMantenimientos(modelo); 
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en registro: " + e.getMessage());
+        }
+    }
+
+    public void cargarMantenimientos(DefaultTableModel modelo) {
+        try {
+            modelo.setRowCount(0);
+            List<Object[]> datos = mantDao.obtenerTodosParaTabla();
+            for (Object[] fila : datos) {
+                modelo.addRow(fila);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al cargar mantenimientos: " + e.getMessage());
+        }
+    }
+
+    public void agregarMantenimiento(int equipoId, String fecha, String tipo, String descripcion, DefaultTableModel modelo) {
+        try {
+            if (mantDao.insertarMantenimiento(equipoId, fecha, tipo, descripcion)) {
+                JOptionPane.showMessageDialog(null, "Mantenimiento agregado con éxito.");
+                cargarMantenimientos(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al agregar mantenimiento: " + e.getMessage());
+        }
+    }
+
+    public void actualizarMantenimiento(int id, int equipoId, String fecha, String tipo, String descripcion, DefaultTableModel modelo) {
+        try {
+            if (mantDao.actualizarMantenimiento(id, equipoId, fecha, tipo, descripcion)) {
+                JOptionPane.showMessageDialog(null, "Mantenimiento actualizado con éxito.");
+                cargarMantenimientos(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar mantenimiento: " + e.getMessage());
+        }
+    }
+
+    public void eliminarMantenimiento(int id, DefaultTableModel modelo) {
+        try {
+            if (mantDao.eliminarMantenimiento(id)) {
+                JOptionPane.showMessageDialog(null, "Mantenimiento eliminado con éxito.");
+                cargarMantenimientos(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar mantenimiento: " + e.getMessage());
         }
     }
 
@@ -88,15 +133,126 @@ public class ControladorOficina {
         }
     }
 
+    public void agregarEquipo(String nombre, String tipo, String estado, DefaultTableModel modelo) {
+        try {
+            if (equipoDao.insertarEquipo(nombre, tipo, estado)) {
+                JOptionPane.showMessageDialog(null, "Equipo agregado con éxito.");
+                cargarEquipos(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al agregar equipo: " + e.getMessage());
+        }
+    }
+
+    public void actualizarEquipo(int id, String nombre, String tipo, String estado, DefaultTableModel modelo) {
+        try {
+            if (equipoDao.actualizarEquipo(id, nombre, tipo, estado)) {
+                JOptionPane.showMessageDialog(null, "Equipo actualizado con éxito.");
+                cargarEquipos(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar equipo: " + e.getMessage());
+        }
+    }
+
+    public void eliminarEquipo(int id, DefaultTableModel modelo) {
+        try {
+            if (equipoDao.eliminarEquipo(id)) {
+                JOptionPane.showMessageDialog(null, "Equipo eliminado con éxito.");
+                cargarEquipos(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar equipo: " + e.getMessage());
+        }
+    }
+
+    public void cargarSoftware(DefaultTableModel modelo) {
+        try {
+            modelo.setRowCount(0);
+            List<Object[]> datos = softDao.obtenerTodosParaTabla();
+            for (Object[] fila : datos) {
+                modelo.addRow(fila);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al cargar software: " + e.getMessage());
+        }
+    }
+
+    public void agregarSoftware(int equipoId, String nombreSoftware, String version, DefaultTableModel modelo) {
+        try {
+            if (softDao.insertarSoftware(equipoId, nombreSoftware, version)) {
+                JOptionPane.showMessageDialog(null, "Software agregado con éxito.");
+                cargarSoftware(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al agregar software: " + e.getMessage());
+        }
+    }
+
+    public void actualizarSoftware(int id, int equipoId, String nombreSoftware, String version, DefaultTableModel modelo) {
+        try {
+            if (softDao.actualizarSoftware(id, equipoId, nombreSoftware, version)) {
+                JOptionPane.showMessageDialog(null, "Software actualizado con éxito.");
+                cargarSoftware(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar software: " + e.getMessage());
+        }
+    }
+
+    public void eliminarSoftware(int id, DefaultTableModel modelo) {
+        try {
+            if (softDao.eliminarSoftware(id)) {
+                JOptionPane.showMessageDialog(null, "Software eliminado con éxito.");
+                cargarSoftware(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar software: " + e.getMessage());
+        }
+    }
+
     public void cargarPiezas(DefaultTableModel modelo) {
         try {
             modelo.setRowCount(0);
-            List<Pieza> piezas = piezaDao.listarPiezas();
-            for (Pieza p : piezas) {
-                modelo.addRow(new Object[]{p.getId(), p.getNombre(), p.getStock()});
+            List<Object[]> datos = piezaDao.obtenerTodosParaTabla();
+            for (Object[] fila : datos) {
+                modelo.addRow(fila);
             }
         } catch (SQLException e) {
             System.err.println("Error al cargar piezas: " + e.getMessage());
+        }
+    }
+
+    public void agregarPieza(String nombre, int stock, DefaultTableModel modelo) {
+        try {
+            if (piezaDao.insertarPieza(nombre, stock)) {
+                JOptionPane.showMessageDialog(null, "Pieza agregada con éxito.");
+                cargarPiezas(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al agregar pieza: " + e.getMessage());
+        }
+    }
+
+    public void actualizarPieza(int id, String nombre, int stock, DefaultTableModel modelo) {
+        try {
+            if (piezaDao.actualizarPieza(id, nombre, stock)) {
+                JOptionPane.showMessageDialog(null, "Pieza actualizada con éxito.");
+                cargarPiezas(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar pieza: " + e.getMessage());
+        }
+    }
+
+    public void eliminarPieza(int id, DefaultTableModel modelo) {
+        try {
+            if (piezaDao.eliminarPieza(id)) {
+                JOptionPane.showMessageDialog(null, "Pieza eliminada con éxito.");
+                cargarPiezas(modelo);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar pieza: " + e.getMessage());
         }
     }
 }
