@@ -14,22 +14,22 @@ public class MenuPrincipal extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        // Fondo amarillo y margen
+        // Fondo
         JPanel panel = new JPanel(new GridLayout(1, 2, 20, 20));
         panel.setBackground(Color.decode("#FFFFE0")); 
         panel.setBorder(BorderFactory.createEmptyBorder(50, 40, 50, 40));
         setContentPane(panel);
 
-        // Botón 1: Flota
-        JButton btnFlota = new JButton("<html><center>🚛<br>GESTIÓN DE FLOTA</center></html>");
+        // Flota
+        JButton btnFlota = new JButton("<html><center><br>GESTIÓN DE FLOTA</center></html>");
         btnFlota.setBackground(Color.WHITE);
         btnFlota.addActionListener(e -> {
             new SubMenuFlota().setVisible(true);
             this.dispose();
         });
 
-        // Botón 2: Oficina
-        JButton btnOficina = new JButton("<html><center>💻<br>GESTIÓN DE OFICINA</center></html>");
+        // Oficina
+        JButton btnOficina = new JButton("<html><center><br>GESTIÓN DE OFICINA</center></html>");
         btnOficina.setBackground(Color.WHITE);
         btnOficina.addActionListener(e -> {
             new SubMenuOficina().setVisible(true);

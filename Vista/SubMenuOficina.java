@@ -15,11 +15,11 @@ public class SubMenuOficina extends JFrame {
         ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         getContentPane().setBackground(Color.decode("#FFFFE0")); // Fondo amarillo Hirata
 
-        JButton btnEquipos = new JButton("1. Inventario de Equipos");
-        JButton btnSoftware = new JButton("2. Software y Actualizaciones");
-        JButton btnPiezas = new JButton("3. Stock de Repuestos/Insumos");
-        JButton btnMantenimiento = new JButton("4. Registro Mantenimiento TI");
-        JButton btnVolver = new JButton("⬅ Volver al Menú Principal");
+        JButton btnEquipos = new JButton("1. Inventario equipos");
+        JButton btnSoftware = new JButton("2. Softwares");
+        JButton btnPiezas = new JButton("3. Stock de Repuestos");
+        JButton btnMantenimiento = new JButton("4. Mantenimiento");
+        JButton btnVolver = new JButton("Volver");
 
         // 1. EQUIPOS
         btnEquipos.addActionListener(e -> {
@@ -28,7 +28,7 @@ public class SubMenuOficina extends JFrame {
             new VistaTabla("Inventario de Equipos", col, form, false).setVisible(true);
         });
 
-        // 2. SOFTWARE (Corregido: ahora abre)
+        // 2. SOFTWARE 
         btnSoftware.addActionListener(e -> {
             String[] col = {"ID", "ID Equipo", "Programa", "Versión"};
             String[] form = {"ID Equipo", "Nombre Software", "Versión Actual"};
@@ -42,7 +42,7 @@ public class SubMenuOficina extends JFrame {
             new VistaTabla("Inventario de Repuestos TI", col, form, false).setVisible(true);
         });
 
-        // 4. MANTENIMIENTO TI (Corregido: ahora abre)
+        // 4. MANTENIMIENTO 
         btnMantenimiento.addActionListener(e -> {
             String[] col = {"ID", "ID Equipo", "Fecha", "Tipo", "Descripción"};
             String[] form = {"ID Equipo", "Fecha Servicio", "Tipo (Preventivo/Correctivo)", "Descripción"};
