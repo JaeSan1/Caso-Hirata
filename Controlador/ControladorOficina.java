@@ -1,5 +1,6 @@
 package Controlador;
 
+import Dao.Conexion;
 import Dao.EquipoOficinaDao;
 import Dao.MantenimientoEquipoDao;
 import Dao.PiezaDao;
@@ -8,7 +9,10 @@ import Modelo.EquipoOficina;
 import Modelo.MantenimientoEquipo;
 import Modelo.Pieza;
 import Modelo.SoftwareEquipo;
+
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -109,9 +113,9 @@ public class ControladorOficina {
     }
 
     // RF-09: Control de Inventario de Piezas
-    public void ajustarStock(int piezaId, int cantidad, DefaultTableModel modeloPiezas) {
+    public void ajustarStock(int piezaId, int cantidad, String fecha, String estado, DefaultTableModel modeloPiezas) {
         try {
-            if (piezaDao.actualizarStock(piezaId, cantidad)) {
+            if (piezaDao.actualizarStock(piezaId, cantidad, fecha, estado)) {
                 cargarPiezas(modeloPiezas);
                 JOptionPane.showMessageDialog(null, "Inventario actualizado.");
             }
@@ -223,9 +227,9 @@ public class ControladorOficina {
         }
     }
 
-    public void agregarPieza(String nombre, int stock, DefaultTableModel modelo) {
+    public void agregarPieza(String nombre, int stock, String fecha, String estado, DefaultTableModel modelo) {
         try {
-            if (piezaDao.insertarPieza(nombre, stock)) {
+            if (piezaDao.insertarPieza(nombre, stock, fecha, estado)) {
                 JOptionPane.showMessageDialog(null, "Pieza agregada con éxito.");
                 cargarPiezas(modelo);
             }
@@ -234,9 +238,9 @@ public class ControladorOficina {
         }
     }
 
-    public void actualizarPieza(int id, String nombre, int stock, DefaultTableModel modelo) {
+    public void actualizarPieza(int id, String nombre, int stock, String fecha, String estado, DefaultTableModel modelo) {
         try {
-            if (piezaDao.actualizarPieza(id, nombre, stock)) {
+            if (piezaDao.actualizarPieza(id, nombre, stock, fecha, estado)) {
                 JOptionPane.showMessageDialog(null, "Pieza actualizada con éxito.");
                 cargarPiezas(modelo);
             }

@@ -5,7 +5,7 @@ public class MantenimientoEquipo {
     private int id;
     private int equipoId;
     private Date fecha;
-    private String tipo; // Preventivo o Correctivo
+    private String tipo; 
     private String descripcion;
 
     public MantenimientoEquipo() {}

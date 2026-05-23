@@ -8,7 +8,7 @@ public class EquipoOficina {
 
     public EquipoOficina() {}
 
-    // Constructor con parámetros (Necesario para EquipoOficinaDao)
+    // Constructor 
     public EquipoOficina(int id, String nombre, String tipo, String estado) {
         this.id = id;
         this.nombre = nombre;

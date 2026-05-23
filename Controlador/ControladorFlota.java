@@ -15,28 +15,23 @@ public class ControladorFlota {
     private final ConductorDao conductorDao = new ConductorDao();
     private final MantenimientoDao mantenimientoDao = new MantenimientoDao();
 
-    // =================================================================
-    // 1. GESTIÓN DE CAMIONES (CRUD COMPLETO)
-    // =================================================================
+    // GESTIÓN DE CAMIONES (CRUD COMPLETO)
     
     public void cargarCamiones(DefaultTableModel modeloPrincipal, DefaultTableModel modeloAlertas) {
     try {
-        // 1. LIMPIEZA: Vaciamos ambas tablas antes de cargar datos frescos
+        // Vaciamos ambas tablas antes de cargar datos
         modeloPrincipal.setRowCount(0);
         if (modeloAlertas != null) {
             modeloAlertas.setRowCount(0);
         }
 
-        // 2. LECTURA: Obtenemos los datos desde el DAO
-        // Nota: Usamos obtenerSoloCamiones() que es el método que tienes en tu CamionDao.java
+        // LEER
         List<Object[]> lista = camionDao.obtenerSoloCamiones(); 
 
         for (Object[] fila : lista) {
-            // 3. LLENADO PRINCIPAL: Agregamos la fila a la tabla de gestión
             modeloPrincipal.addRow(fila);
 
-            // 4. LÓGICA DE ALERTA (RF-10): Calculamos la diferencia de kilometraje
-            // fila[4] es KM Actual, fila[5] es KM Último Mantenimiento
+            // LÓGICA DE ALERTA (RF-10): Calculamos la diferencia de kilometraje
             try {
                 double kmActual = Double.parseDouble(fila[4].toString());
                 double kmUltimo = Double.parseDouble(fila[5].toString());
@@ -45,13 +40,13 @@ public class ControladorFlota {
                 // Si el exceso es >= 5000 km y estamos en la vista de Camiones
                 if (diferencia >= 5000 && modeloAlertas != null) {
                     modeloAlertas.addRow(new Object[]{
-                        fila[1] + " " + fila[2], // Marca y Modelo
-                        String.format("%.1f km", diferencia), // Kilometraje de exceso
-                        "PENDIENTE" // Estado de la alerta
+                        fila[1] + " " + fila[2], 
+                        String.format("%.1f km", diferencia), 
+                        "PENDIENTE" 
                     });
                 }
             } catch (Exception e) {
-                // Si un dato no es numérico, saltamos esa fila para evitar que el sistema se caiga
+                // Si un dato no es num, saltamos esa fila para evitar que el sistema se caiga
                 System.err.println("Error procesando alerta para ID " + fila[0] + ": " + e.getMessage());
             }
         }
@@ -81,7 +76,7 @@ public class ControladorFlota {
             c.setAnio(Integer.parseInt(an));
             c.setKmActual(Double.parseDouble(kmA));
             c.setKmUltimoMantenimiento(Double.parseDouble(kmU));
-            if (camionDao.actualizarSoloCamion(c)) { // Se requiere crear en DAO
+            if (camionDao.actualizarSoloCamion(c)) { 
                 cargarCamiones(m,a);
                 JOptionPane.showMessageDialog(null, "Camión ID " + id + " actualizado.");
             }
@@ -97,9 +92,9 @@ public class ControladorFlota {
         } catch (SQLException e) { JOptionPane.showMessageDialog(null, "Error: " + e.getMessage()); }
     }
 
-    // =================================================================
-    // 2. GESTIÓN DE CONDUCTORES (CRUD COMPLETO)
-    // =================================================================
+
+    // GESTIÓN DE CONDUCTORES (CRUD COMPLETO)
+
 
     public void cargarConductores(DefaultTableModel modelo) {
         try {
@@ -113,7 +108,7 @@ public class ControladorFlota {
 
     public void agregarConductor(String nom, String lic, String tel, DefaultTableModel m) {
         try {
-            if (conductorDao.insertar(nom, lic, tel)) { // Se requiere crear en DAO
+            if (conductorDao.insertar(nom, lic, tel)) { 
                 cargarConductores(m);
                 JOptionPane.showMessageDialog(null, "Conductor registrado.");
             }
@@ -122,7 +117,7 @@ public class ControladorFlota {
 
     public void actualizarConductor(int id, String nom, String lic, String tel, DefaultTableModel m) {
         try {
-            if (conductorDao.actualizar(id, nom, lic, tel)) { // Se requiere crear en DAO
+            if (conductorDao.actualizar(id, nom, lic, tel)) { 
                 cargarConductores(m);
                 JOptionPane.showMessageDialog(null, "Datos del conductor actualizados.");
             }
@@ -131,33 +126,37 @@ public class ControladorFlota {
 
     public void eliminarConductor(int id, DefaultTableModel m) {
         try {
-            if (conductorDao.eliminar(id)) { // Se requiere crear en DAO
+            if (conductorDao.eliminar(id)) { 
                 cargarConductores(m);
                 JOptionPane.showMessageDialog(null, "Conductor removido del sistema.");
             }
         } catch (Exception e) { System.err.println("Error: " + e.getMessage()); }
     }
 
-    // =================================================================
-    // 3. GESTIÓN DE MANTENIMIENTO (CRUD COMPLETO)
-    // =================================================================
+
+    // GESTIÓN DE MANTENIMIENTO 
 
     public void cargarHistorial(DefaultTableModel modelo) {
-    try {
-        modelo.setRowCount(0);
-        List<Object[]> lista = mantenimientoDao.obtenerHistorialCompleto(); 
-        for (Object[] fila : lista) {
-            // Estructura: ID, Fecha, Tipo, Descripcion, KmActual
-            modelo.addRow(new Object[]{fila[0], fila[1], fila[2], fila[3], fila[4]});
+        try {
+            modelo.setRowCount(0); 
+            List<Object[]> lista = mantenimientoDao.obtenerHistorialCompleto(); 
+            for (Object[] fila : lista) {
+                modelo.addRow(new Object[]{
+                    fila[0], // ID Técnico Oculto
+                    fila[1], // Marca Camión
+                    fila[2], // Fecha
+                    fila[3], // Tipo Mant.
+                    fila[4]  // Descripción
+                });
+            }
+        } catch (SQLException e) { 
+            System.err.println("Error carga historial en controlador: " + e.getMessage()); 
         }
-    } catch (SQLException e) { 
-        System.err.println("Error carga historial: " + e.getMessage()); 
     }
-}
 
 public void agregarMantenimiento(int idCamion, String fecha, String tipo, String desc, String km, DefaultTableModel m) {
     try {
-        double kilometraje = Double.parseDouble(km); // Convertimos el texto a número
+        double kilometraje = Double.parseDouble(km); 
         if (mantenimientoDao.insertarMantenimiento(idCamion, fecha, tipo, desc, kilometraje)) {
             cargarHistorial(m);
             JOptionPane.showMessageDialog(null, "Mantenimiento registrado a los " + km + " km.");
@@ -181,7 +180,7 @@ public void actualizarMantenimiento(int idMant, String fecha, String tipo, Strin
 
     public void eliminarMantenimiento(int idMant, DefaultTableModel m) {
         try {
-            if (mantenimientoDao.eliminar(idMant)) { // Se requiere crear en DAO
+            if (mantenimientoDao.eliminar(idMant)) { 
                 cargarHistorial(m);
                 JOptionPane.showMessageDialog(null, "Entrada de historial eliminada.");
             }

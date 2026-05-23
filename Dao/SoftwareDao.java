@@ -42,7 +42,7 @@ public class SoftwareDao {
 
     public List<Object[]> obtenerTodosParaTabla() throws SQLException {
         List<Object[]> lista = new ArrayList<>();
-        String sql = "SELECT id, equipo_id, nombre_software, version FROM software_equipos";
+        String sql = "SELECT id, equipo_id, nombre_software, version, fecha_actualizacion FROM software_equipos";
         try (Connection con = Conexion.getConexion();
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()) {
@@ -51,7 +51,8 @@ public class SoftwareDao {
                     rs.getInt("id"),
                     rs.getInt("equipo_id"),
                     rs.getString("nombre_software"),
-                    rs.getString("version")
+                    rs.getString("version"),
+                    rs.getDate("fecha_actualizacion") != null ? rs.getDate("fecha_actualizacion").toString() : "Sin fecha"
                 });
             }
         }
@@ -59,7 +60,6 @@ public class SoftwareDao {
     }
 
     public boolean insertarSoftware(int equipoId, String nombreSoftware, String version) throws SQLException {
-        // Verificar que el equipo existe
         String sqlCheck = "SELECT COUNT(*) FROM equipos_oficina WHERE id = ?";
         try (Connection con = Conexion.getConexion();
             PreparedStatement psCheck = con.prepareStatement(sqlCheck)) {
@@ -82,7 +82,6 @@ public class SoftwareDao {
     }
 
     public boolean actualizarSoftware(int id, int equipoId, String nombreSoftware, String version) throws SQLException {
-        // Verificar que el equipo existe
         String sqlCheck = "SELECT COUNT(*) FROM equipos_oficina WHERE id = ?";
         try (Connection con = Conexion.getConexion();
             PreparedStatement psCheck = con.prepareStatement(sqlCheck)) {

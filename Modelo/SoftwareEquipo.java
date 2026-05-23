@@ -10,7 +10,7 @@ public class SoftwareEquipo {
 
     public SoftwareEquipo() {}
 
-    // Constructor con parámetros (Necesario para SoftwareDao)
+    // Constructor  
     public SoftwareEquipo(int id, int equipoId, String nombreSoftware, String version, Date fechaActualizacion) {
         this.id = id;
         this.equipoId = equipoId;

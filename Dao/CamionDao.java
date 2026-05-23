@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CamionDao {
     
-    // Método para insertar solo el camión (Ventana 1)
+    // Método para insertar solo el camión
     public boolean insertarSoloCamion(Camion camion) throws SQLException {
         String sql = "INSERT INTO camiones (marca, modelo, anio, km_actual, km_ultimo_mantenimiento) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = Conexion.getConexion();

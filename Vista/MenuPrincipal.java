@@ -6,7 +6,8 @@ import javax.swing.*;
 public class MenuPrincipal extends JFrame {
 
     public MenuPrincipal() {
-        // Estilo básico del sistema operativo
+
+        // Estilo 
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) {}
 
         setTitle("Sistema Hirata - Menú");
