@@ -196,12 +196,12 @@ public class VistaTabla extends JFrame {
                 try {
                     int filaCorrecta = tablePrincipal.convertRowIndexToModel(fila);
                     
-                    // Recorremos las cajas de texto del formulario
+                    // Recorremos formulario
                     for (int i = 0; i < campos.size(); i++) {
                         if ((i + 1) < modelPrincipal.getColumnCount()) {
                             Object valor = modelPrincipal.getValueAt(filaCorrecta, i + 1);
                             
-                            // Validamos que la celda no sea nula para evitar el error 
+                            // Validamos que la celda no sea nula
                             if (valor != null) {
                                 campos.get(i).setText(valor.toString());
                             } else {
@@ -218,7 +218,7 @@ public class VistaTabla extends JFrame {
             }
         });
 
-        // LÓGICA RF-08: BARRA DE BÚSQUEDA DINÁMICA CORREGIDA (EVITA QUE SE ROMPA LA TABLA)
+        // LÓGICA RF-08: BARRA DE BÚSQUEDA 
         TableRowSorter<DefaultTableModel> sorterGlobal = new TableRowSorter<>(modelPrincipal);
         tablePrincipal.setRowSorter(sorterGlobal);
 
@@ -231,15 +231,10 @@ public class VistaTabla extends JFrame {
                     try {
                         // 1. Averiguamos cuántas columnas reales tiene la tabla actual
                         int totalColumnas = modelPrincipal.getColumnCount();
-                        
-                        // 2. Creamos un arreglo con los índices visibles (desde la 1 hasta la última)
-                        // Esto ignora automáticamente la columna 0 (ID oculta)
                         int[] columnasVisibles = new int[totalColumnas - 1];
                         for (int i = 0; i < columnasVisibles.length; i++) {
                             columnasVisibles[i] = i + 1;
                         }
-                        
-                        // 3. Aplicamos el filtro usando el arreglo dinámico
                         sorterGlobal.setRowFilter(RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(texto), columnasVisibles));
                     } catch (Exception pse) {
                         System.err.println("Error en patrón de búsqueda: " + pse.getMessage());
@@ -266,21 +261,23 @@ public class VistaTabla extends JFrame {
                         campos.get(2).getText(), modelPrincipal);
 
                 } else if (tituloModulo.contains("Mantenimientos")) {
+
                     // Capturamos el ID del mantenimiento seleccionado
                     int idMant = Integer.parseInt(modelPrincipal.getValueAt(fila, 0).toString());
                     
-                    // Los campos del formulario a la izquierda son 4:
+                    // Los campos del formulario 
                     String camionIdStr = campos.get(0).getText().trim(); 
                     String fecha = campos.get(1).getText().trim();
                     String tipo = campos.get(2).getText().trim();
                     String desc = campos.get(3).getText().trim();
+                    String kmActual = campos.get(4).getText().trim();
                     
                     ctrlFlota.actualizarMantenimiento(
                         idMant, 
                         fecha, 
                         tipo, 
                         desc, 
-                        "0", 
+                        kmActual, 
                         modelPrincipal
                     );  
                 
@@ -335,13 +332,14 @@ public class VistaTabla extends JFrame {
                     String fecha = campos.get(1).getText().trim();
                     String tipo = campos.get(2).getText().trim();
                     String desc = campos.get(3).getText().trim();
+                    String kmActual = campos.get(4).getText().trim();
                     
                     ctrlFlota.agregarMantenimiento(
                         idCamionReal, 
                         fecha, 
                         tipo, 
                         desc, 
-                        "0", 
+                        kmActual, 
                         modelPrincipal
                     );
                     cargarDatosDesdeBase(); 
@@ -400,7 +398,7 @@ public class VistaTabla extends JFrame {
                         ctrlOficina.eliminarEquipo(id, modelPrincipal);
                     } else if (tituloModulo.contains("Gestión de Software")) {
                         ctrlOficina.eliminarSoftware(id, modelPrincipal);
-                    } else if (tituloModulo.contains("Inventario de Repuestos")) {
+                    } else if (tituloModulo.contains("Inventario de Piezas")) {
                         ctrlOficina.eliminarPieza(id, modelPrincipal);
                     } else if (tituloModulo.contains("Mantenimiento de Oficina")) {
                         ctrlOficina.eliminarMantenimiento(id, modelPrincipal);

@@ -36,7 +36,7 @@ public class SubMenuFlota extends JFrame {
 
         // MANTENIMIENTOS 
         btnMantenimientos.addActionListener(e -> {
-            String[] col = {"ID", "Marca Camión", "Fecha", "Tipo Mant.", "Descripción"};
+            String[] col = {"ID", "Marca Camión", "Fecha", "Tipo Mant.", "Descripción", "KM al Momento"};
             String[] form = {"ID del Camión", "Fecha (YYYY-MM-DD)", "Tipo Mant.", "Descripción"};
             new VistaTabla("Historial de Mantenimientos", col, form, false).setVisible(true);
         });
