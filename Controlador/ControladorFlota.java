@@ -146,7 +146,8 @@ public class ControladorFlota {
                     fila[1], // Marca Camión
                     fila[2], // Fecha
                     fila[3], // Tipo Mant.
-                    fila[4]  // Descripción
+                    fila[4],  // Descripción
+                    fila[5] // KM al Momento
                 });
             }
         } catch (SQLException e) { 
